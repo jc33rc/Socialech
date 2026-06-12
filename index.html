@@ -333,13 +333,17 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
   background:rgba(14,31,27,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
   border:1px solid rgba(255,255,255,.12); border-radius:var(--radius-md);
   padding:12px 14px; color:#fff; font-size:11px; line-height:1.6;
-  font-family:'Plus Jakarta Sans',monospace; display:none; min-width:152px;
+  font-family:'Plus Jakarta Sans',monospace; display:none; min-width:152px; max-width:210px;
 }
 #debug-panel.show{ display:block; }
-#debug-panel .row{ display:flex; justify-content:space-between; gap:14px; }
-#debug-panel .row span:last-child{ font-weight:700; color:var(--mint); }
+#debug-panel .row{ display:flex; justify-content:space-between; gap:10px; }
+#debug-panel .row span:first-child{ flex:none; }
+#debug-panel .row span:last-child{
+  font-weight:700; color:var(--mint); text-align:right;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:120px;
+}
 #debug-panel .row.warn span:last-child{ color:var(--amber); }
-#debug-panel .row.bad span:last-child{ color:var(--coral); }
+#debug-panel .row.bad span:last-child{ color:var(--coral); white-space:normal; max-width:130px; }
 
 /* permission / load error overlay inside session */
 .session-error{
@@ -570,11 +574,13 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20v-6M6 20V10M18 20V4"/></svg>
       </button>
       <div id="debug-panel">
-        <div class="row"><span>FPS detección</span><span id="dbg-fps">—</span></div>
-        <div class="row"><span>Inferencia</span><span id="dbg-infer">—</span></div>
-        <div class="row"><span>Rostro</span><span id="dbg-face">—</span></div>
-        <div class="row"><span>Manos</span><span id="dbg-hands">—</span></div>
-        <div class="row"><span>Voz</span><span id="dbg-speech">—</span></div>
+        <div class="row" id="dbg-row-face"><span>Rostro</span><span id="dbg-face">—</span></div>
+        <div class="row" id="dbg-row-hands"><span>Manos</span><span id="dbg-hands">—</span></div>
+        <div class="row"><span>Video</span><span id="dbg-video">—</span></div>
+        <div class="row" id="dbg-row-infer"><span>Inferencia</span><span id="dbg-infer">—</span></div>
+        <div class="row"><span>FPS</span><span id="dbg-fps">—</span></div>
+        <div class="row" id="dbg-row-speech"><span>Voz</span><span id="dbg-speech">—</span></div>
+        <div class="row"><span>Palabras</span><span id="dbg-words">0</span></div>
       </div>
 
       <div class="session-error" id="session-error">
@@ -650,7 +656,7 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
      TENSORFLOW.JS + MODELOS (cargados por el navegador del usuario)
      ============================================================ -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose@0.1.0/dist/handpose.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/hand-pose-detection@2.0.1/dist/hand-pose-detection.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.5/dist/face-landmarks-detection.min.js"></script>
 
 <script>
@@ -682,6 +688,7 @@ const state = {
   lastFillerCheck: '',
   // debug
   lastInferMs: 0, fpsCounter: 0, fpsTimestamp: performance.now(), fpsValue: 0,
+  dbg: { video:'', faceErr:'', handErr:'' },
 };
 
 // ---------- REFERENCIAS DOM ----------
@@ -740,7 +747,10 @@ async function loadModels(){
     await tf.setBackend('webgl');
     await tf.ready();
 
-    state.handModel = await handpose.load();
+    state.handModel = await handPoseDetection.createDetector(
+      handPoseDetection.SupportedModels.MediaPipeHands,
+      { runtime: 'tfjs', modelType: 'lite', maxHands: 2 }
+    );
     state.faceModel = await faceLandmarksDetection.createDetector(
       faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh,
       { runtime: 'tfjs', refineLandmarks: false, maxFaces: 1 }
@@ -819,6 +829,7 @@ function beginTimedSession(){
   state.calibrated = true;
   state.startTime = performance.now();
   updateTimerDisplay(0);
+  $('debug-panel').classList.add('show');
 
   state.timerInterval = setInterval(() => {
     const elapsed = (performance.now() - state.startTime) / 1000;
@@ -846,16 +857,22 @@ $('stop-btn').addEventListener('click', () => {
 async function detectTick(){
   if(!state.sessionActive) return;
   const video = $('cam');
-  if(video.readyState < 2) return;
+  if(video.readyState < 2 || !video.videoWidth){
+    state.dbg.video = `${video.videoWidth}x${video.videoHeight} (rs${video.readyState})`;
+    updateDebugPanel([], []);
+    return;
+  }
+  state.dbg.video = `${video.videoWidth}x${video.videoHeight}`;
 
   const t0 = performance.now();
   let faces = [], hands = [];
-  try{
-    [faces, hands] = await Promise.all([
-      state.faceModel.estimateFaces(video),
-      state.handModel.estimateHands(video)
-    ]);
-  }catch(e){ console.warn('detectTick error', e); return; }
+
+  try{ faces = await state.faceModel.estimateFaces(video); state.dbg.faceErr = ''; }
+  catch(e){ state.dbg.faceErr = (e && e.message ? e.message : String(e)).slice(0,34); }
+
+  try{ hands = await state.handModel.estimateHands(video); state.dbg.handErr = ''; }
+  catch(e){ state.dbg.handErr = (e && e.message ? e.message : String(e)).slice(0,34); }
+
   const inferMs = performance.now() - t0;
 
   // ---- debug fps ----
@@ -902,9 +919,9 @@ async function detectTick(){
       const mx = fbox.width*0.35, my = fbox.height*0.35;
       const fx0=fbox.xMin-mx, fx1=fbox.xMax+mx, fy0=fbox.yMin-my, fy1=fbox.yMax+my;
       for(const h of hands){
-        const hb = h.boundingBox;
-        const tl = hb.topLeft, br = hb.bottomRight;
-        const overlap = !(br[0]<fx0 || tl[0]>fx1 || br[1]<fy0 || tl[1]>fy1);
+        const xs = h.keypoints.map(k=>k.x), ys = h.keypoints.map(k=>k.y);
+        const hx0=Math.min(...xs), hx1=Math.max(...xs), hy0=Math.min(...ys), hy1=Math.max(...ys);
+        const overlap = !(hx1<fx0 || hx0>fx1 || hy1<fy0 || hy0>fy1);
         if(overlap){ handVal = 0; break; }
       }
     }
@@ -951,12 +968,15 @@ function startSpeechRecognition(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if(!SR){
     $('dbg-speech').textContent = 'no soportado';
+    $('dbg-row-speech').classList.add('bad');
     return;
   }
   state.recognition = new SR();
   state.recognition.lang = 'es-ES';
   state.recognition.continuous = true;
   state.recognition.interimResults = true;
+
+  $('dbg-speech').textContent = 'iniciando…';
 
   state.recognition.onresult = (event) => {
     let finalChunk = '';
@@ -965,12 +985,20 @@ function startSpeechRecognition(){
     }
     if(finalChunk) state.transcript += finalChunk;
     updateSpeechLeaves();
-    $('dbg-speech').textContent = 'activo';
+    $('dbg-row-speech').classList.remove('bad');
+    $('dbg-speech').textContent = 'escuchando';
+    $('dbg-words').textContent = state.transcript.trim().split(/\s+/).filter(Boolean).length;
   };
-  state.recognition.onerror = (e) => { $('dbg-speech').textContent = 'error: '+e.error; };
+  state.recognition.onerror = (e) => {
+    $('dbg-speech').textContent = '⚠ '+e.error;
+    $('dbg-row-speech').classList.add('bad');
+  };
   state.recognition.onend = () => { if(state.sessionActive) try{ state.recognition.start(); }catch(e){} };
 
-  try{ state.recognition.start(); }catch(e){ console.warn('speech start error', e); }
+  try{ state.recognition.start(); }catch(e){
+    $('dbg-speech').textContent = '⚠ '+(e.message||e);
+    $('dbg-row-speech').classList.add('bad');
+  }
 }
 
 function stopSpeechRecognition(){
@@ -1013,10 +1041,22 @@ $('debug-toggle').addEventListener('click', () => {
 function updateDebugPanel(faces, hands){
   $('dbg-fps').textContent = state.fpsValue + ' Hz';
   $('dbg-infer').textContent = state.lastInferMs.toFixed(0) + ' ms';
-  $('dbg-face').textContent = faces.length ? 'detectado' : '—';
-  $('dbg-hands').textContent = hands.length;
+  $('dbg-video').textContent = state.dbg.video || '—';
 
-  const infEl = $('dbg-infer').parentElement;
+  const faceRow = $('dbg-row-face'), handRow = $('dbg-row-hands');
+  faceRow.classList.remove('bad');
+  handRow.classList.remove('bad');
+
+  if(state.dbg.faceErr){ $('dbg-face').textContent = '⚠ '+state.dbg.faceErr; faceRow.classList.add('bad'); }
+  else $('dbg-face').textContent = faces.length ? 'detectado' : 'sin detección';
+
+  if(state.dbg.handErr){ $('dbg-hands').textContent = '⚠ '+state.dbg.handErr; handRow.classList.add('bad'); }
+  else $('dbg-hands').textContent = hands.length;
+
+  const words = state.transcript.trim().split(/\s+/).filter(Boolean).length;
+  $('dbg-words').textContent = words;
+
+  const infEl = $('dbg-row-infer');
   infEl.classList.remove('warn','bad');
   if(state.lastInferMs > 250) infEl.classList.add('bad');
   else if(state.lastInferMs > 130) infEl.classList.add('warn');

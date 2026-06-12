@@ -49,3 +49,24 @@ Con esto probado en tu dispositivo (Motorola G75 / Chrome Android), confirmamos:
 - Si la estética/interacción se siente como se espera.
 
 Con eso validado, armamos el prompt verificado para Emergent (auditoría técnica + integración WebView en Expo, igual que KinearFit).
+
+## Troubleshooting (v2)
+
+Si tu reporte muestra **todas las métricas en 0 con puntaje exactamente 55**, eso indica que el loop de detección nunca corrió ni un solo tick — no es un problema de distancia/posición, es un error de código.
+
+**Qué se corrigió en esta versión**: `@tensorflow-models/handpose@0.1.0` (2020) es incompatible con `tfjs@4.20.0` — al lanzar error en cada frame, tumbaba también la detección de rostro vía `Promise.all`. Se reemplazó por `@tensorflow-models/hand-pose-detection` (runtime `tfjs`, compatible con tfjs 4.x), y ahora rostro/manos se evalúan de forma independiente.
+
+**Cómo leer el panel debug** (visible automáticamente al iniciar la sesión, ⚙ abajo a la derecha para ocultar/mostrar):
+
+| Fila | Qué significa |
+|---|---|
+| **Rostro** / **Manos** | "detectado" / número de manos = OK. Si ves **⚠ + mensaje en rojo**, es un error de librería/modelo — copia ese texto exacto, lo necesito para seguir ajustando. |
+| **Video** | resolución real de la cámara (ej. `640x480`). Si dice `0x0`, la cámara no está entregando frames — revisa permisos o reinicia la página. |
+| **Inferencia** | ms por tick. Verde = normal. Ámbar >130ms, Rojo >250ms = posible lag perceptible. |
+| **FPS** | ticks de detección por segundo (~7 esperado). |
+| **Voz** | "escuchando" = OK. "iniciando…" que nunca cambia, o **⚠**, indica que el reconocimiento de voz no está capturando audio. |
+| **Palabras** | conteo en vivo de la transcripción — si se queda en 0 mientras hablas, el micrófono/Web Speech no está funcionando. |
+
+**Si "Rostro"/"Manos" siguen sin detectar (sin error, dice "sin detección") pero Video/FPS se ven bien**: ahí sí aplica tu sugerencia de posición — prueba a la altura de los ojos, 50-80cm, buena luz, encuadre con cabeza+torso completos.
+
+**Sobre los módulos Ejercicios/Practicar**: no es un truncamiento — este prototipo cubre intencionalmente solo **Evaluar**, que es la base compartida (cámara + TFJS + semáforos + reporte) de los 3 módulos. Una vez confirmado que la detección funciona aquí, agregamos Ejercicios/Practicar reutilizando esta misma base.
