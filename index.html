@@ -186,6 +186,115 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
 .cam-illus .txt b{ color:var(--mint-dark); }
 
 /* ============================================================
+   HOME — selector de módulos
+   ============================================================ */
+#screen-home .content{ display:flex; flex-direction:column; }
+.home-title{ font-size:30px; font-weight:700; margin:8px 0 4px; }
+.home-sub{ font-size:14px; color:var(--gray); margin:0 0 26px; }
+.module-card{
+  display:flex; align-items:center; gap:14px;
+  padding:18px; border-radius:var(--radius-lg);
+  background:var(--white); box-shadow:var(--shadow-card);
+  margin-bottom:14px; transition:transform var(--t-fast);
+}
+.module-card:active{ transform:scale(.98); }
+.module-icon{
+  width:50px; height:50px; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--mint-light);
+}
+.module-icon svg{ width:22px; height:22px; stroke:var(--mint-dark); fill:none; stroke-width:2; }
+.module-body{ flex:1; }
+.module-name{ font-size:16px; font-weight:700; color:var(--ink); margin-bottom:2px; }
+.module-desc{ font-size:12.5px; color:var(--gray); line-height:1.4; }
+.module-chev{ flex:none; opacity:.35; }
+.module-chev svg{ width:18px; height:18px; stroke:var(--ink-soft); fill:none; stroke-width:2.4; }
+
+/* grid de tarjetas (ejercicios / contextos) */
+.grid-cards{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:8px; }
+.pick-card{
+  display:flex; flex-direction:column; gap:10px;
+  padding:16px; border-radius:var(--radius-lg);
+  background:var(--white); box-shadow:var(--shadow-card);
+  transition:transform var(--t-fast), box-shadow var(--t-fast);
+}
+.pick-card:active{ transform:scale(.97); }
+.pick-card .module-icon{ width:42px; height:42px; }
+.pick-card .module-icon svg{ width:19px; height:19px; }
+.pick-name{ font-size:13.5px; font-weight:700; color:var(--ink); line-height:1.3; }
+.pick-sub{ font-size:11.5px; color:var(--gray); }
+.pick-card.full{ grid-column:1/-1; flex-direction:row; align-items:center; }
+
+/* badges de estado en ejercicios */
+.pick-badge{
+  font-size:10.5px; font-weight:700; padding:3px 9px; border-radius:var(--radius-pill);
+  background:var(--mint-light); color:var(--mint-dark); align-self:flex-start;
+}
+.pick-badge.dominado{ background:var(--mint); color:#fff; }
+
+/* mensaje contextual (Practicar) */
+.context-msg{
+  background:var(--mint-light); border-radius:var(--radius-lg);
+  padding:16px 18px; font-size:13.5px; color:var(--ink-soft);
+  line-height:1.6; margin-bottom:22px;
+}
+
+/* mejor marca (Ejercicios) */
+.best-mark{
+  display:flex; justify-content:space-between; align-items:center;
+  background:var(--mint-light); border-radius:var(--radius-lg);
+  padding:14px 18px; margin-bottom:22px;
+}
+.best-mark .lbl{ font-size:12.5px; color:var(--mint-dark); font-weight:600; }
+.best-mark .val{ font-size:20px; font-weight:700; font-family:var(--font-display); color:var(--ink); }
+
+/* resultado de ejercicio: comparación grande */
+.exercise-result{ text-align:center; padding:8px 0 28px; }
+.exercise-result .focus-icon{
+  width:64px; height:64px; border-radius:50%; margin:0 auto 16px;
+  background:var(--mint-light); display:flex; align-items:center; justify-content:center;
+}
+.exercise-result .focus-icon svg{ width:28px; height:28px; stroke:var(--mint-dark); fill:none; stroke-width:2; }
+.exercise-result .big-num{ font-size:54px; font-weight:700; font-family:var(--font-display); line-height:1; }
+.exercise-result .big-lbl{ font-size:13px; color:var(--gray); margin-top:6px; }
+.exercise-compare{
+  display:flex; justify-content:center; gap:28px; margin-top:22px;
+}
+.exercise-compare .col{ text-align:center; }
+.exercise-compare .col .num{ font-size:22px; font-weight:700; font-family:var(--font-display); }
+.exercise-compare .col .lbl{ font-size:11px; color:var(--gray); margin-top:2px; }
+.exercise-compare .col.best .num{ color:var(--mint-dark); }
+.exercise-progress{ margin-top:24px; }
+.exercise-progress .track{
+  height:8px; border-radius:var(--radius-pill); background:var(--mint-light); overflow:hidden;
+}
+.exercise-progress .fill{
+  height:100%; border-radius:var(--radius-pill); background:var(--mint);
+  width:0%; transition:width 1s var(--ease);
+}
+.exercise-progress .cap{ font-size:11.5px; color:var(--gray); margin-top:8px; text-align:center; }
+
+/* sesión: modo "ejercicio" — un solo indicador grande y centrado */
+.leaf-bar.focused-mode{ gap:0; }
+.leaf-bar.focused-mode .leaf-item{ display:none; }
+.leaf-bar.focused-mode .leaf-item.is-focus{
+  display:flex;
+}
+.leaf-bar.focused-mode .leaf-item.is-focus .leaf{
+  width:56px; height:56px; transform:translateY(0) rotate(0deg);
+}
+.leaf-bar.focused-mode .leaf-item.is-focus .leaf svg{ width:24px; height:24px; }
+
+/* cierre de ánimo (Practicar, muy nervioso) */
+.encourage-card{
+  display:flex; gap:12px; padding:16px 18px; border-radius:var(--radius-lg);
+  background:var(--mint); color:#fff; margin-top:4px; margin-bottom:18px;
+  align-items:flex-start;
+}
+.encourage-card svg{ width:20px; height:20px; stroke:#fff; fill:none; stroke-width:2; flex:none; margin-top:1px; }
+.encourage-card p{ font-size:13px; line-height:1.55; margin:0; }
+
+/* ============================================================
    LOADING SCREEN
    ============================================================ */
 #screen-loading{ align-items:center; justify-content:center; text-align:center; }
@@ -476,20 +585,57 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
   </section>
 
   <!-- ============================================================
+       SCREEN: HOME — selector de módulos
+       ============================================================ -->
+  <section id="screen-home" class="screen">
+    <div class="ambient"><span></span><span></span></div>
+    <div class="content">
+      <div class="home-title">Socialech</div>
+      <p class="home-sub">Practica tu comunicación con feedback en tiempo real.</p>
+
+      <div class="module-card" data-module="evaluar">
+        <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/></svg></div>
+        <div class="module-body">
+          <div class="module-name">Evaluar</div>
+          <div class="module-desc">Sesión libre — reporte general de las 5 métricas</div>
+        </div>
+        <div class="module-chev"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+
+      <div class="module-card" data-module="ejercicios">
+        <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg></div>
+        <div class="module-body">
+          <div class="module-name">Ejercicios</div>
+          <div class="module-desc">Entrena una habilidad específica y compárate</div>
+        </div>
+        <div class="module-chev"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+
+      <div class="module-card" data-module="practicar">
+        <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+        <div class="module-body">
+          <div class="module-name">Practicar — "Antes de..."</div>
+          <div class="module-desc">Prepárate para entrevista, cita, presentación...</div>
+        </div>
+        <div class="module-chev"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6"/></svg></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
        SCREEN: CONFIG (Evaluar)
        ============================================================ -->
   <section id="screen-config" class="screen">
     <div class="ambient"><span></span><span></span></div>
     <div class="content">
       <div class="top-row">
-        <div>
-          <div class="eyebrow">Evaluar</div>
-          <h1 class="title">Evaluación general</h1>
-        </div>
+        <div class="icon-btn back-home"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
         <div class="icon-btn" id="lang-btn" title="Idioma">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
         </div>
       </div>
+      <div class="eyebrow">Evaluar</div>
+      <h1 class="title">Evaluación general</h1>
 
       <p class="lede">Habla libremente entre 1 y 5 minutos sobre cualquier tema. Analizaremos tu contacto visual, gestos, postura, muletillas y ritmo.</p>
 
@@ -535,6 +681,229 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
   </section>
 
   <!-- ============================================================
+       SCREEN: EJERCICIOS — catálogo
+       ============================================================ -->
+  <section id="screen-ejercicios-catalogo" class="screen">
+    <div class="ambient"><span></span><span></span></div>
+    <div class="content">
+      <div class="top-row">
+        <div class="icon-btn back-home"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+      </div>
+      <div class="eyebrow">Ejercicios</div>
+      <h1 class="title" style="margin-bottom:18px;">Elige una habilidad</h1>
+
+      <div class="grid-cards" id="exercise-grid">
+        <div class="pick-card" data-key="eye" data-name="Punto fijo" data-desc="Mantén contacto visual con la cámara mientras hablas.">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/></svg></div>
+          <div class="pick-name">Punto fijo</div>
+          <div class="pick-sub">Mirada</div>
+          <div class="pick-badge" data-badge="eye">Nuevo</div>
+        </div>
+        <div class="pick-card" data-key="hand" data-name="Manos ancladas" data-desc="Habla sin tocarte el rostro — manos en zona neutra.">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-1-6-3l-3.5-5"/></svg></div>
+          <div class="pick-name">Manos ancladas</div>
+          <div class="pick-sub">Gestos</div>
+          <div class="pick-badge" data-badge="hand">Nuevo</div>
+        </div>
+        <div class="pick-card" data-key="posture" data-name="Columna alineada" data-desc="Mantén cabeza y hombros estables toda la sesión.">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M9 11h6M9 21l2-7M15 21l-2-7"/></svg></div>
+          <div class="pick-name">Columna alineada</div>
+          <div class="pick-sub">Postura</div>
+          <div class="pick-badge" data-badge="posture">Nuevo</div>
+        </div>
+        <div class="pick-card" data-key="filler" data-name="Pausa consciente" data-desc="Sustituye muletillas por pausas silenciosas.">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.4 8.5 8.5 0 0 1-3-.57L3 21l1.67-6A8.38 8.38 0 0 1 21 11.5z"/></svg></div>
+          <div class="pick-name">Pausa consciente</div>
+          <div class="pick-sub">Muletillas</div>
+          <div class="pick-badge" data-badge="filler">Nuevo</div>
+        </div>
+        <div class="pick-card full" data-key="pace" data-name="Cadencia controlada" data-desc="Mantén tu ritmo de habla en el rango recomendado (120–160 wpm).">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
+          <div class="module-body">
+            <div class="pick-name">Cadencia controlada</div>
+            <div class="pick-sub">Ritmo</div>
+          </div>
+          <div class="pick-badge" data-badge="pace">Nuevo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: EJERCICIOS — detalle
+       ============================================================ -->
+  <section id="screen-ejercicios-detalle" class="screen">
+    <div class="ambient"><span></span><span></span></div>
+    <div class="content">
+      <div class="top-row">
+        <div class="icon-btn" id="ej-back-cat"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+      </div>
+      <div class="eyebrow" id="ej-eyebrow">Ejercicio</div>
+      <h1 class="title" id="ej-title">—</h1>
+      <p class="lede" id="ej-desc">—</p>
+
+      <div class="best-mark">
+        <span class="lbl">Tu mejor marca</span>
+        <span class="val" id="ej-best">—</span>
+      </div>
+
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Duración
+      </div>
+      <div class="chip-row" id="ej-duration-chips">
+        <div class="chip" data-val="60">1 min</div>
+        <div class="chip selected" data-val="120">2 min</div>
+        <div class="chip" data-val="180">3 min</div>
+      </div>
+
+      <div class="cam-illus">
+        <svg viewBox="0 0 96 96" fill="none">
+          <rect x="6" y="4" width="20" height="32" rx="4" stroke="#1F8F7A" stroke-width="2.5"/>
+          <circle cx="16" cy="14" r="1.6" fill="#1F8F7A"/>
+          <circle cx="60" cy="40" r="11" stroke="#1F8F7A" stroke-width="2.5"/>
+          <path d="M42 78c0-12 8-20 18-20s18 8 18 20" stroke="#1F8F7A" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="29" y1="20" x2="48" y2="38" stroke="#1F8F7A" stroke-width="2" stroke-dasharray="3 4"/>
+          <line x1="29" y1="20" x2="48" y2="44" stroke="#1F8F7A" stroke-width="2" stroke-dasharray="3 4"/>
+        </svg>
+        <div class="txt">Coloca el dispositivo <b>a la altura de tus ojos</b>, a unos <b>50–80 cm</b> de distancia, mostrando cabeza y torso.</div>
+      </div>
+
+      <button class="btn btn-primary" id="ej-start-btn">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        Comenzar ejercicio
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: EJERCICIOS — resultado comparativo
+       ============================================================ -->
+  <section id="screen-ejercicio-resultado" class="screen">
+    <div class="ambient"><span></span><span></span></div>
+    <div class="content">
+      <div class="eyebrow">Resultado</div>
+      <h1 class="title" id="ej-res-title" style="margin-bottom:4px;">—</h1>
+
+      <div class="exercise-result">
+        <div class="focus-icon" id="ej-res-icon"></div>
+        <div class="big-num" id="ej-res-value">—</div>
+        <div class="big-lbl" id="ej-res-label">—</div>
+
+        <div class="exercise-compare">
+          <div class="col">
+            <div class="num" id="ej-res-today">—</div>
+            <div class="lbl">HOY</div>
+          </div>
+          <div class="col best">
+            <div class="num" id="ej-res-best">—</div>
+            <div class="lbl">MEJOR MARCA</div>
+          </div>
+        </div>
+
+        <div class="exercise-progress">
+          <div class="track"><div class="fill" id="ej-progress-fill"></div></div>
+          <div class="cap" id="ej-progress-cap">—</div>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <button class="btn btn-primary" id="ej-repeat-btn">Repetir ejercicio</button>
+        <button class="btn btn-secondary" id="ej-back-catalog-btn">Volver al catálogo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: PRACTICAR — selección de contexto
+       ============================================================ -->
+  <section id="screen-practicar-contexto" class="screen">
+    <div class="ambient"><span></span><span></span></div>
+    <div class="content">
+      <div class="top-row">
+        <div class="icon-btn back-home"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+      </div>
+      <div class="eyebrow">Practicar</div>
+      <h1 class="title" style="margin-bottom:18px;">¿Para qué te preparas?</h1>
+
+      <div class="grid-cards" id="context-grid">
+        <div class="pick-card" data-ctx="Entrevista de trabajo">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+          <div class="pick-name">Entrevista de trabajo</div>
+        </div>
+        <div class="pick-card" data-ctx="Cita">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></div>
+          <div class="pick-name">Cita</div>
+        </div>
+        <div class="pick-card" data-ctx="Reunión social">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div class="pick-name">Reunión social</div>
+        </div>
+        <div class="pick-card" data-ctx="Presentación">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/></svg></div>
+          <div class="pick-name">Presentación</div>
+        </div>
+        <div class="pick-card full" data-ctx="Llamada importante">
+          <div class="module-icon"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+          <div class="module-body"><div class="pick-name">Llamada importante</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SCREEN: PRACTICAR — config previa
+       ============================================================ -->
+  <section id="screen-practicar-config" class="screen">
+    <div class="ambient"><span></span><span></span></div>
+    <div class="content">
+      <div class="top-row">
+        <div class="icon-btn" id="pr-back-ctx"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+      </div>
+      <div class="eyebrow">Practicar</div>
+      <h1 class="title" id="pr-title">—</h1>
+
+      <div class="context-msg" id="pr-context-msg">—</div>
+
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        ¿Cómo te sientes?
+      </div>
+      <div class="chip-row" id="pr-checkin-chips">
+        <div class="chip selected" data-val="Tranquilo">Tranquilo</div>
+        <div class="chip" data-val="Algo nervioso">Algo nervioso</div>
+        <div class="chip" data-val="Muy nervioso">Muy nervioso</div>
+      </div>
+
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Duración
+      </div>
+      <div class="chip-row" id="pr-duration-chips">
+        <div class="chip selected" data-val="120">2 min</div>
+        <div class="chip" data-val="300">5 min</div>
+      </div>
+
+      <div class="cam-illus">
+        <svg viewBox="0 0 96 96" fill="none">
+          <rect x="6" y="4" width="20" height="32" rx="4" stroke="#1F8F7A" stroke-width="2.5"/>
+          <circle cx="16" cy="14" r="1.6" fill="#1F8F7A"/>
+          <circle cx="60" cy="40" r="11" stroke="#1F8F7A" stroke-width="2.5"/>
+          <path d="M42 78c0-12 8-20 18-20s18 8 18 20" stroke="#1F8F7A" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="29" y1="20" x2="48" y2="38" stroke="#1F8F7A" stroke-width="2" stroke-dasharray="3 4"/>
+          <line x1="29" y1="20" x2="48" y2="44" stroke="#1F8F7A" stroke-width="2" stroke-dasharray="3 4"/>
+        </svg>
+        <div class="txt">Coloca el dispositivo <b>a la altura de tus ojos</b>, a unos <b>50–80 cm</b> de distancia, mostrando cabeza y torso.</div>
+      </div>
+
+      <button class="btn btn-primary" id="pr-start-btn">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        Comenzar práctica
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================
        SCREEN: LIVE SESSION
        ============================================================ -->
   <section id="screen-session" class="screen">
@@ -553,19 +922,19 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
       </div>
 
       <div class="leaf-bar" id="leaf-bar">
-        <div class="leaf-item">
+        <div class="leaf-item" data-key="eye">
           <div class="leaf" id="leaf-mirada"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
         </div>
-        <div class="leaf-item">
+        <div class="leaf-item" data-key="hand">
           <div class="leaf" id="leaf-gestos"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-1-6-3l-3.5-5"/></svg></div>
         </div>
-        <div class="leaf-item">
+        <div class="leaf-item" data-key="posture">
           <div class="leaf" id="leaf-postura"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M9 11h6M9 21l2-7M15 21l-2-7"/></svg></div>
         </div>
-        <div class="leaf-item">
+        <div class="leaf-item" data-key="filler">
           <div class="leaf" id="leaf-muletillas"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-9 8.4 8.5 8.5 0 0 1-3-.57L3 21l1.67-6A8.38 8.38 0 0 1 21 11.5z"/></svg></div>
         </div>
-        <div class="leaf-item">
+        <div class="leaf-item" data-key="pace">
           <div class="leaf" id="leaf-ritmo"><svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
         </div>
       </div>
@@ -607,8 +976,8 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
   <section id="screen-report" class="screen">
     <div class="ambient"><span></span><span></span></div>
     <div class="content">
-      <div class="eyebrow">Reporte</div>
-      <h1 class="title" style="margin-bottom:18px;">Tu evaluación</h1>
+      <div class="eyebrow" id="report-eyebrow">Reporte</div>
+      <h1 class="title" id="report-title" style="margin-bottom:18px;">Tu evaluación</h1>
 
       <div class="gauge-wrap pulse">
         <svg viewBox="0 0 160 160">
@@ -637,6 +1006,8 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
 
       <div id="metric-cards"></div>
 
+      <div id="encourage-container"></div>
+
       <div class="section-label" style="margin-top:18px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         Recomendaciones
@@ -645,7 +1016,7 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
 
       <div class="cta-row">
         <button class="btn btn-primary" id="back-home-btn">Guardar y volver al inicio</button>
-        <button class="btn btn-secondary" id="repeat-eval-btn">Repetir evaluación</button>
+        <button class="btn btn-secondary" id="repeat-eval-btn">Repetir</button>
       </div>
     </div>
   </section>
@@ -681,6 +1052,14 @@ const state = {
   detectInterval: null,
   recognition: null,
   transcript: '',
+  // ---- módulo / contexto ----
+  sessionMode: 'evaluar',   // 'evaluar' | 'ejercicio' | 'practicar'
+  exerciseKey: null,        // 'eye'|'hand'|'posture'|'filler'|'pace'
+  exerciseMeta: null,       // {name, desc}
+  practiceContext: '',
+  checkin: 'Tranquilo',
+  // mejores marcas por ejercicio (en memoria, se reinician al recargar la página)
+  bestMarks: { eye:null, hand:null, posture:null, filler:null, pace:null },
   // series temporales para sparklines / promedios
   series: { eye: [], hand: [], posture: [] },
   // acumuladores
@@ -693,14 +1072,39 @@ const state = {
 
 // ---------- REFERENCIAS DOM ----------
 const $ = (id) => document.getElementById(id);
-const screens = ['screen-loading','screen-config','screen-session','screen-analyzing','screen-report'];
+const screens = ['screen-loading','screen-home','screen-config',
+  'screen-ejercicios-catalogo','screen-ejercicios-detalle','screen-ejercicio-resultado',
+  'screen-practicar-contexto','screen-practicar-config',
+  'screen-session','screen-analyzing','screen-report'];
 
 function showScreen(id){
   screens.forEach(s => $(s).classList.toggle('active', s === id));
 }
 
 // ============================================================
-// CONFIG SCREEN
+// HOME — selector de módulos
+// ============================================================
+document.querySelectorAll('#screen-home .module-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const mod = card.dataset.module;
+    if(mod === 'evaluar'){
+      state.sessionMode = 'evaluar';
+      showScreen('screen-config');
+    } else if(mod === 'ejercicios'){
+      showScreen('screen-ejercicios-catalogo');
+    } else if(mod === 'practicar'){
+      showScreen('screen-practicar-contexto');
+    }
+  });
+});
+
+// cualquier botón con clase .back-home vuelve al inicio
+document.querySelectorAll('.back-home').forEach(btn => {
+  btn.addEventListener('click', () => showScreen('screen-home'));
+});
+
+// ============================================================
+// EVALUAR — config
 // ============================================================
 $('duration-chips').addEventListener('click', (e) => {
   const chip = e.target.closest('.chip');
@@ -718,23 +1122,135 @@ $('topic-scroll').addEventListener('click', (e) => {
   state.topic = chip.dataset.topic || '';
 });
 
-$('start-eval-btn').addEventListener('click', startSession);
+$('start-eval-btn').addEventListener('click', () => {
+  state.sessionMode = 'evaluar';
+  state.exerciseKey = null;
+  startSession();
+});
+
+// ============================================================
+// EJERCICIOS — catálogo + detalle + resultado
+// ============================================================
+const EXERCISE_ICONS = {
+  eye: '<circle cx="12" cy="12" r="3"/><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/>',
+  hand: '<path d="M18 11V6a2 2 0 0 0-4 0v0M14 10V4a2 2 0 0 0-4 0v2M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-1-6-3l-3.5-5"/>',
+  posture: '<circle cx="12" cy="5" r="2.5"/><path d="M12 8v6M9 11h6M9 21l2-7M15 21l-2-7"/>',
+  filler: '<path d="M21 11.5a8.38 8.38 0 0 1-9 8.4 8.5 8.5 0 0 1-3-.57L3 21l1.67-6A8.38 8.38 0 0 1 21 11.5z"/>',
+  pace: '<path d="M3 12h4l3 8 4-16 3 8h4"/>'
+};
+const EXERCISE_UNIT = { eye:'%', hand:'/min', posture:'%', filler:'', pace:' wpm' };
+
+function refreshExerciseBadges(){
+  document.querySelectorAll('#exercise-grid .pick-badge').forEach(b => {
+    const key = b.dataset.badge;
+    const best = state.bestMarks[key];
+    if(best !== null){ b.textContent = 'Mejor: '+best+EXERCISE_UNIT[key]; b.classList.add('dominado'); }
+  });
+}
+
+document.querySelectorAll('.pick-card[data-key]').forEach(card => {
+  card.addEventListener('click', () => {
+    state.exerciseKey = card.dataset.key;
+    state.exerciseMeta = { name: card.dataset.name, desc: card.dataset.desc };
+    $('ej-title').textContent = card.dataset.name;
+    $('ej-desc').textContent = card.dataset.desc;
+    const best = state.bestMarks[state.exerciseKey];
+    $('ej-best').textContent = best === null ? '—' : (best + EXERCISE_UNIT[state.exerciseKey]);
+    showScreen('screen-ejercicios-detalle');
+  });
+});
+
+$('ej-back-cat').addEventListener('click', () => showScreen('screen-ejercicios-catalogo'));
+
+$('ej-duration-chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('#ej-duration-chips .chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  state.duration = parseInt(chip.dataset.val, 10);
+});
+
+$('ej-start-btn').addEventListener('click', () => {
+  state.sessionMode = 'ejercicio';
+  startSession();
+});
+
+$('ej-repeat-btn').addEventListener('click', () => {
+  resetSessionData();
+  startSession();
+});
+$('ej-back-catalog-btn').addEventListener('click', () => {
+  refreshExerciseBadges();
+  showScreen('screen-ejercicios-catalogo');
+});
+
+// ============================================================
+// PRACTICAR — contexto + config previa
+// ============================================================
+const CONTEXT_MESSAGES = {
+  'Entrevista de trabajo': 'En entrevistas, los nervios suelen acelerar el habla y aumentar las muletillas. Vamos a poner foco extra en tu ritmo y tus pausas.',
+  'Cita': 'En una cita, las pausas transmiten seguridad, no incomodidad. Vamos a observar tu contacto visual y tu ritmo.',
+  'Reunión social': 'En grupo es fácil acelerar el ritmo para "no quitar tiempo". Vamos a cuidar tu postura y tu cadencia.',
+  'Presentación': 'En presentaciones, la postura y el contacto visual sostienen tu mensaje. Vamos a darles especial atención.',
+  'Llamada importante': 'Sin contacto visual real, tu voz lleva más peso. Vamos a enfocarnos en ritmo y muletillas.'
+};
+
+document.querySelectorAll('.pick-card[data-ctx]').forEach(card => {
+  card.addEventListener('click', () => {
+    state.practiceContext = card.dataset.ctx;
+    $('pr-title').textContent = card.dataset.ctx;
+    $('pr-context-msg').textContent = CONTEXT_MESSAGES[card.dataset.ctx] || '';
+    showScreen('screen-practicar-config');
+  });
+});
+
+$('pr-back-ctx').addEventListener('click', () => showScreen('screen-practicar-contexto'));
+
+$('pr-checkin-chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('#pr-checkin-chips .chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  state.checkin = chip.dataset.val;
+});
+
+$('pr-duration-chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('#pr-duration-chips .chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  state.duration = parseInt(chip.dataset.val, 10);
+});
+
+$('pr-start-btn').addEventListener('click', () => {
+  state.sessionMode = 'practicar';
+  state.exerciseKey = null;
+  startSession();
+});
+
+// ============================================================
+// COMUNES — sesión / reporte
+// ============================================================
 $('retry-load').addEventListener('click', loadModels);
 $('session-error-back').addEventListener('click', () => {
   stopAllStreams();
-  showScreen('screen-config');
+  showScreen('screen-home');
 });
-$('back-home-btn').addEventListener('click', resetToConfig);
+$('back-home-btn').addEventListener('click', () => {
+  resetSessionData();
+  refreshExerciseBadges();
+  showScreen('screen-home');
+});
 $('repeat-eval-btn').addEventListener('click', () => {
-  resetToConfig();
+  resetSessionData();
+  startSession();
 });
 
-function resetToConfig(){
+function resetSessionData(){
   // reinicia acumuladores para una nueva sesión
   state.series = { eye: [], hand: [], posture: [] };
   state.faceTouchTicks = 0; state.totalTicks = 0; state.postureStableTicks = 0;
   state.transcript = '';
-  showScreen('screen-config');
 }
 
 // ============================================================
@@ -757,7 +1273,7 @@ async function loadModels(){
     );
 
     state.modelsReady = true;
-    showScreen('screen-config');
+    showScreen('screen-home');
   }catch(err){
     console.error('Error cargando modelos TFJS', err);
     $('loading-text').classList.add('hidden');
@@ -774,6 +1290,14 @@ async function startSession(){
   $('calib-overlay').classList.remove('hide');
   $('calib-msg').textContent = 'Ubica tu rostro y manos en el encuadre';
   resetLeaves();
+  resetSessionData(); // garantiza datos limpios sin importar de qué pantalla se viene
+
+  // modo ejercicio: mostrar solo el indicador de la habilidad enfocada
+  const leafBar = $('leaf-bar');
+  leafBar.classList.toggle('focused-mode', state.sessionMode === 'ejercicio');
+  document.querySelectorAll('#leaf-bar .leaf-item').forEach(item => {
+    item.classList.toggle('is-focus', state.sessionMode === 'ejercicio' && item.dataset.key === state.exerciseKey);
+  });
 
   try{
     state.stream = await navigator.mediaDevices.getUserMedia({
@@ -807,11 +1331,21 @@ function runCalibrationLoop(){
   const tick = async () => {
     if(!state.sessionActive) return;
     attempts++;
+    const video = $('cam');
     let faceOk = false;
-    try{
-      const faces = await state.faceModel.estimateFaces($('cam'));
-      faceOk = faces && faces.length > 0 && (faces[0].faceInViewConfidence === undefined || faces[0].faceInViewConfidence > 0.5);
-    }catch(e){ /* ignorar frame perdido */ }
+    if(video.videoWidth){
+      if(!state.detectCanvas){
+        state.detectCanvas = document.createElement('canvas');
+        state.detectCtx = state.detectCanvas.getContext('2d');
+      }
+      state.detectCanvas.width = video.videoWidth;
+      state.detectCanvas.height = video.videoHeight;
+      state.detectCtx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+      try{
+        const faces = await state.faceModel.estimateFaces(state.detectCanvas);
+        faceOk = faces && faces.length > 0 && (faces[0].faceInViewConfidence === undefined || faces[0].faceInViewConfidence > 0.5);
+      }catch(e){ /* ignorar frame perdido */ }
+    }
 
     if(faceOk || attempts >= MAX_ATTEMPTS){
       $('calib-overlay').classList.add('hide');
@@ -864,13 +1398,23 @@ async function detectTick(){
   }
   state.dbg.video = `${video.videoWidth}x${video.videoHeight}`;
 
+  // canvas intermedio: algunos modelos TFJS tienen quirks con <video> en portrait
+  if(!state.detectCanvas){
+    state.detectCanvas = document.createElement('canvas');
+    state.detectCtx = state.detectCanvas.getContext('2d');
+  }
+  state.detectCanvas.width = video.videoWidth;
+  state.detectCanvas.height = video.videoHeight;
+  state.detectCtx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+  const input = state.detectCanvas;
+
   const t0 = performance.now();
   let faces = [], hands = [];
 
-  try{ faces = await state.faceModel.estimateFaces(video); state.dbg.faceErr = ''; }
+  try{ faces = await state.faceModel.estimateFaces(input); state.dbg.faceErr = ''; }
   catch(e){ state.dbg.faceErr = (e && e.message ? e.message : String(e)).slice(0,34); }
 
-  try{ hands = await state.handModel.estimateHands(video); state.dbg.handErr = ''; }
+  try{ hands = await state.handModel.estimateHands(input); state.dbg.handErr = ''; }
   catch(e){ state.dbg.handErr = (e && e.message ? e.message : String(e)).slice(0,34); }
 
   const inferMs = performance.now() - t0;
@@ -1074,8 +1618,13 @@ function endSession(){
   showScreen('screen-analyzing');
   setTimeout(() => {
     stopAllStreams();
-    buildReport();
-    showScreen('screen-report');
+    if(state.sessionMode === 'ejercicio'){
+      buildExerciseResult();
+      showScreen('screen-ejercicio-resultado');
+    } else {
+      buildReport();
+      showScreen('screen-report');
+    }
   }, 1200);
 }
 
@@ -1114,7 +1663,8 @@ function sparkSVG(arr, color){
 
 let lastMetrics = null;
 
-function buildReport(){
+// ---- cálculo de métricas crudas, reutilizable por Evaluar/Practicar/Ejercicios ----
+function computeMetrics(){
   const dur = Math.max((performance.now() - state.startTime)/60000, 1/60);
   const eyePct = Math.round(avgArr(state.series.eye));
   const postureStablePct = state.totalTicks ? Math.round((state.postureStableTicks/state.totalTicks)*100) : 0;
@@ -1136,22 +1686,39 @@ function buildReport(){
   const scoreOf = (lvl) => lvl==='green'?100: lvl==='amber'?60:25;
   const overall = Math.round((scoreOf(eyeLevel)+scoreOf(postureLevel)+scoreOf(handLevel)+scoreOf(fillerLevel)+scoreOf(paceLevel))/5);
 
+  return { dur, eyePct, postureStablePct, touchPerMin, words, wpm, fillers, fillerPerMin,
+    eyeLevel, postureLevel, handLevel, fillerLevel, paceLevel, overall };
+}
+
+function buildReport(){
+  const m = computeMetrics();
+
+  // ---- título según modo ----
+  if(state.sessionMode === 'practicar'){
+    $('report-eyebrow').textContent = 'Practicar';
+    $('report-title').textContent = state.practiceContext || 'Tu práctica';
+  } else {
+    $('report-eyebrow').textContent = 'Reporte';
+    $('report-title').textContent = 'Tu evaluación';
+  }
+
   // ---- gauge ----
   const circumference = 439.6;
-  const offset = circumference * (1 - overall/100);
+  const offset = circumference * (1 - m.overall/100);
   const fg = $('gauge-fg');
-  const colorVar = overall>=70 ? 'var(--mint)' : overall>=40 ? 'var(--amber)' : 'var(--coral)';
+  const colorVar = m.overall>=70 ? 'var(--mint)' : m.overall>=40 ? 'var(--amber)' : 'var(--coral)';
   fg.style.stroke = colorVar;
+  fg.style.strokeDashoffset = circumference; // reset antes de animar
   setTimeout(()=>{ fg.style.strokeDashoffset = offset; }, 80);
-  $('score-num').textContent = overall;
+  $('score-num').textContent = m.overall;
 
   // ---- metric cards ----
   const cards = [
-    { key:'eye', name:'Contacto visual', value:eyePct+'%', sub:'Tiempo mirando a cámara', level:eyeLevel, spark:sparkSVG(state.series.eye, levelColor(eyeLevel)) },
-    { key:'hand', name:'Gestos de manos', value: Math.round(touchPerMin)+'/min', sub:'Toques al rostro detectados', level:handLevel, spark:sparkSVG(state.series.hand, levelColor(handLevel)) },
-    { key:'posture', name:'Postura / cabeza', value: postureStablePct+'%', sub:'Tiempo con postura estable', level:postureLevel, spark:sparkSVG(state.series.posture, levelColor(postureLevel)) },
-    { key:'filler', name:'Muletillas', value: fillers, sub: fillerPerMin.toFixed(1)+' por minuto', level:fillerLevel, spark:'' },
-    { key:'pace', name:'Ritmo de habla', value: wpm+' wpm', sub:'Rango recomendado: 120–160', level:paceLevel, spark:'' },
+    { key:'eye', name:'Contacto visual', value:m.eyePct+'%', sub:'Tiempo mirando a cámara', level:m.eyeLevel, spark:sparkSVG(state.series.eye, levelColor(m.eyeLevel)) },
+    { key:'hand', name:'Gestos de manos', value: Math.round(m.touchPerMin)+'/min', sub:'Toques al rostro detectados', level:m.handLevel, spark:sparkSVG(state.series.hand, levelColor(m.handLevel)) },
+    { key:'posture', name:'Postura / cabeza', value: m.postureStablePct+'%', sub:'Tiempo con postura estable', level:m.postureLevel, spark:sparkSVG(state.series.posture, levelColor(m.postureLevel)) },
+    { key:'filler', name:'Muletillas', value: m.fillers, sub: m.fillerPerMin.toFixed(1)+' por minuto', level:m.fillerLevel, spark:'' },
+    { key:'pace', name:'Ritmo de habla', value: m.wpm+' wpm', sub:'Rango recomendado: 120–160', level:m.paceLevel, spark:'' },
   ];
 
   $('metric-cards').innerHTML = cards.map(c => `
@@ -1168,7 +1735,22 @@ function buildReport(){
     </div>
   `).join('');
 
-  lastMetrics = { eyePct, postureStablePct, touchPerMin: Math.round(touchPerMin), fillers, fillerPerMin: +fillerPerMin.toFixed(1), wpm, overall, durationMin:+dur.toFixed(1), topic: state.topic, transcriptSample: state.transcript.trim().slice(0,400) };
+  // ---- encourage card (Practicar + muy nervioso) ----
+  if(state.sessionMode === 'practicar' && state.checkin === 'Muy nervioso'){
+    $('encourage-container').innerHTML = `
+      <div class="encourage-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 1 0-7.78 7.78l1.06 1.06L12 21l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <p>Practicar así, aunque sientas nervios, es justo lo que ayuda a reducirlos con el tiempo. Vas por buen camino.</p>
+      </div>`;
+  } else {
+    $('encourage-container').innerHTML = '';
+  }
+
+  lastMetrics = { eyePct:m.eyePct, postureStablePct:m.postureStablePct, touchPerMin: Math.round(m.touchPerMin),
+    fillers:m.fillers, fillerPerMin: +m.fillerPerMin.toFixed(1), wpm:m.wpm, overall:m.overall,
+    durationMin:+m.dur.toFixed(1), topic: state.sessionMode==='evaluar' ? state.topic : '', transcriptSample: state.transcript.trim().slice(0,400),
+    practiceContext: state.sessionMode==='practicar' ? state.practiceContext : '',
+    checkin: state.sessionMode==='practicar' ? state.checkin : '' };
 
   // ---- reset groq UI ----
   $('groq-loading').classList.remove('hidden');
@@ -1178,6 +1760,61 @@ function buildReport(){
   $('rec-cards').innerHTML = '';
 
   callGroq();
+}
+
+// ============================================================
+// EJERCICIOS — resultado comparativo (sin Groq, enfoque single-métrica)
+// ============================================================
+const EXERCISE_TARGET = { eye:80, posture:80, hand:0, filler:0, pace:140 };
+const EXERCISE_TOLERANCE = { eye:80, posture:80, hand:6, filler:6, pace:50 };
+
+function exerciseValue(key, m){
+  switch(key){
+    case 'eye': return { value:m.eyePct, display:m.eyePct+'%', level:m.eyeLevel };
+    case 'hand': return { value:Math.round(m.touchPerMin), display:Math.round(m.touchPerMin)+'/min', level:m.handLevel };
+    case 'posture': return { value:m.postureStablePct, display:m.postureStablePct+'%', level:m.postureLevel };
+    case 'filler': return { value:+m.fillerPerMin.toFixed(1), display:m.fillerPerMin.toFixed(1)+'/min', level:m.fillerLevel };
+    case 'pace': return { value:m.wpm, display:m.wpm+' wpm', level:m.paceLevel };
+  }
+}
+
+function isBetter(key, todayVal, bestVal){
+  if(bestVal === null) return true;
+  if(key==='eye' || key==='posture') return todayVal > bestVal;
+  if(key==='hand' || key==='filler') return todayVal < bestVal;
+  return Math.abs(todayVal-140) < Math.abs(bestVal-140); // pace
+}
+
+function exerciseProgressFill(key, val){
+  const target = EXERCISE_TARGET[key], tol = EXERCISE_TOLERANCE[key];
+  let diff;
+  if(key==='eye' || key==='posture') diff = Math.max(0, target - val);
+  else if(key==='hand' || key==='filler') diff = Math.max(0, val - target);
+  else diff = Math.abs(val - target);
+  return Math.round(Math.max(0, Math.min(100, 100 * (1 - diff/tol))));
+}
+
+function buildExerciseResult(){
+  const m = computeMetrics();
+  const key = state.exerciseKey;
+  const today = exerciseValue(key, m);
+  const best = state.bestMarks[key];
+  const improved = isBetter(key, today.value, best);
+  if(improved) state.bestMarks[key] = today.value;
+  const bestNow = state.bestMarks[key];
+
+  $('ej-res-title').textContent = state.exerciseMeta ? state.exerciseMeta.name : 'Resultado';
+  $('ej-res-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">${EXERCISE_ICONS[key]}</svg>`;
+  $('ej-res-value').textContent = today.display;
+  $('ej-res-value').style.color = levelColor(today.level);
+  $('ej-res-label').textContent = improved ? (best===null ? 'Tu punto de partida' : '¡Nueva mejor marca!') : 'Sigue así';
+
+  $('ej-res-today').textContent = today.display;
+  $('ej-res-best').textContent = bestNow === null ? '—' : (bestNow + EXERCISE_UNIT[key]);
+
+  const fill = exerciseProgressFill(key, today.value);
+  setTimeout(()=>{ $('ej-progress-fill').style.width = fill+'%'; }, 80);
+  $('ej-progress-cap').textContent = fill >= 100 ? '¡Dominado!' : fill >= 75 ? 'Casi lo dominas — sigue practicando' : 'Sigue practicando para dominarlo';
 }
 
 function avgArr(arr){ return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
@@ -1208,9 +1845,13 @@ async function callGroq(){
   $('groq-summary').classList.add('hidden');
   $('key-field').classList.add('hidden');
 
+  const contextLine = lastMetrics.practiceContext
+    ? `\nContexto: el usuario se está preparando para "${lastMetrics.practiceContext}". Check-in emocional: "${lastMetrics.checkin}".\nAdapta las recomendaciones específicamente a ese contexto.${lastMetrics.checkin==='Muy nervioso' ? ' Incluye una frase final breve de aliento reconociendo el nerviosismo sin minimizarlo, sin sugerir evitar la situación.' : ''}`
+    : '';
+
   const sys = `Eres un coach de comunicación cálido, cercano y constructivo. Responde SIEMPRE en español, en JSON válido y nada más (sin markdown, sin backticks), con esta forma exacta:
 {"resumen":"1-2 frases motivadoras sobre el desempeño general","recomendaciones":["recomendación 1","recomendación 2","recomendación 3"]}
-Nunca uses lenguaje punitivo. Enmarca todo como oportunidades de mejora.`;
+Nunca uses lenguaje punitivo. Enmarca todo como oportunidades de mejora.${contextLine}`;
 
   const userMsg = `Métricas de la sesión (${lastMetrics.durationMin} min, tema: ${lastMetrics.topic || 'libre'}):
 - Contacto visual: ${lastMetrics.eyePct}%

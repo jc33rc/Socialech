@@ -1,72 +1,38 @@
-# Socialech — Prototipo Evaluar (validación TFJS + UX)
+# Socialech — Prototipo (Evaluar + Ejercicios + Practicar)
 
-Prototipo interactivo de un solo archivo (`index.html`) que valida el flujo completo del módulo **Evaluar**: configuración → calibración → sesión en vivo con cámara → reporte con feedback de Groq.
+Prototipo interactivo de un solo archivo (`index.html`) que valida la interacción de los **3 módulos** sobre la misma base técnica: cámara + TFJS (handpose+face) + Web Speech + semáforos en vivo + reporte con Groq.
+
+## Navegación
+
+**Home** → 3 tarjetas:
+- **Evaluar**: config (duración/tema) → sesión (5 semáforos) → reporte completo + Groq
+- **Ejercicios**: catálogo (5 habilidades) → detalle (mejor marca + duración) → sesión (1 semáforo enfocado, grande y centrado) → resultado comparativo (hoy vs. mejor marca + barra de progreso)
+- **Practicar**: contexto (Entrevista/Cita/Reunión/Presentación/Llamada) → check-in emocional + duración → sesión (5 semáforos) → reporte + recomendaciones de Groq adaptadas al contexto (+ mensaje de aliento si "Muy nervioso")
+
+> Las "mejores marcas" de Ejercicios viven en memoria — se reinician al recargar la página (no hay storage persistente en este prototipo).
 
 ## Qué valida este prototipo
 
-1. **TFJS dual-model en simultáneo**: `handpose` (manos) + `face-landmarks-detection` (rostro, runtime `tfjs`, sin MediaPipe) corriendo juntos sobre el feed de cámara, a ~7-8 Hz.
-2. **Web Speech API**: reconocimiento de voz en español (`es-ES`) para detectar muletillas y calcular ritmo (wpm).
-3. **UX en vivo**: cámara de fondo, cronómetro, calibración por encuadre (óvalo guía), 5 indicadores tipo "hoja" (semáforo mint/ámbar/coral) sin texto, transiciones suaves.
-4. **Reporte**: medidor circular de puntaje, tarjetas de métricas con mini-gráficos, recomendaciones generadas por Groq (llama-3.3-70b-versatile).
-5. **Sistema visual**: paleta verde-menta, tipografía Outfit + Plus Jakarta Sans, animaciones de "respiración", glow en estados activos.
+1. **TFJS dual-model en simultáneo**: `face-landmarks-detection` (rostro, runtime `tfjs`) + `hand-pose-detection` (manos, MediaPipeHands runtime `tfjs`), pasando el frame por un canvas intermedio.
+2. **Web Speech API**: reconocimiento de voz en español (`es-ES`) para muletillas y wpm.
+3. **UX en vivo**: cámara de fondo, cronómetro, calibración por encuadre, semáforos sin texto (modo completo de 5 o modo enfocado de 1 según el módulo).
+4. **Reporte**: medidor circular, tarjetas con sparklines, recomendaciones de Groq — genéricas (Evaluar) o contextuales (Practicar).
 
 ## Cómo subirlo a GitHub Pages
 
-1. Crea (o usa) un repo, sube `index.html` a la raíz (o a `/docs`).
-2. En **Settings → Pages**, selecciona la rama y carpeta donde está `index.html`.
-3. Abre la URL que GitHub Pages genera **desde el navegador del celular** (Chrome Android recomendado, igual que KinearFit).
+1. Sube `index.html` (reemplaza el existente) a la raíz del repo, commit a `main`.
+2. Settings → Pages ya debería seguir activo desde la config anterior — la URL se actualiza sola en ~1 min.
+3. Abre **desde Chrome Android**, no desde el preview de Claude (cámara bloqueada en iframe de artifacts).
 
-> ⚠️ **Importante**: si abres este HTML dentro de la vista previa de Claude.ai, la cámara probablemente NO funcionará (los iframes de artifacts no delegan permisos de cámara/micrófono). Pruébalo siempre en una pestaña real del navegador (GitHub Pages, o un servidor local).
+## Troubleshooting (v3)
 
-## Cómo probar
+**Si "Manos: 2" pero "Rostro: sin detección" (sin ⚠)**: se agregó un canvas intermedio antes de pasar el frame a ambos modelos — esto es un workaround conocido para quirks de input portrait en `face-landmarks-detection` runtime `tfjs`. Vuelve a probar y lee de nuevo el panel debug.
 
-1. Al abrir, carga los modelos TFJS (unos segundos) → pantalla de config "Evaluar".
-2. Elige duración (1/2/5 min) y opcionalmente un tema.
-3. Toca **Comenzar evaluación** → acepta permisos de cámara y micrófono.
-4. Espera la calibración (óvalo guía) — al detectar tu rostro, arranca el cronómetro.
-5. Habla con normalidad. Observa las 5 "hojas" cambiar de color en tiempo real.
-6. Toca el botón **⚙ (debug)** en la esquina inferior derecha para ver FPS / tiempo de inferencia / detección de rostro y manos — esto es lo que indica si hay lag real en tu dispositivo.
-7. Al terminar (o tocando el botón de stop), verás "Analizando…" y luego el reporte.
-8. En el reporte, pega tu **Groq API key** en el campo indicado para generar el resumen + recomendaciones.
+**Si sigue sin detectar rostro pero Video/FPS están bien**: aquí sí aplica tu sugerencia original — prueba a la altura de los ojos, 50-80cm, buena luz, encuadre con cabeza+torso completos. Si AÚN así "Rostro: sin detección" persiste con manos funcionando perfecto, el siguiente paso sería: (a) probar otra versión de `face-landmarks-detection` (ej. `@1.0.4` o `@1.0.2`), o (b) considerar que el detector de rostro (BlazeFace interno) tenga un requisito de input no documentado que reemplazar por una alternativa equivalente en tfjs.
 
-## Notas técnicas / pendientes
+**Lectura del panel debug**: igual que v2 — Rostro/Manos/Video/Inferencia/FPS/Voz/Palabras, visible automáticamente al iniciar cualquier sesión (⚙ para ocultar/mostrar).
 
-- **API key de Groq**: el campo en el reporte es solo para pruebas. En producción, esta llamada debe pasarse por el backend (Emergent) — nunca expongas la key en el cliente, especialmente si el repo es público.
-- **Métricas v1 (proxies simplificados)**:
-  - *Contacto visual*: orientación frontal del rostro (yaw) vs. cámara — no usa iris tracking todavía.
-  - *Postura*: estabilidad del ángulo de inclinación entre ojos (roll).
-  - *Gestos/manos*: solapamiento del bounding box de la mano con una zona expandida alrededor del rostro ("toque a la cara").
-  - *Muletillas/ritmo*: lista de muletillas en español (`eh`, `o sea`, `bueno`, etc.) + conteo de palabras / tiempo transcurrido.
-- **Mirroring**: el video se muestra en espejo (CSS), pero las coordenadas de TFJS están en el frame original (sin espejo). Esto no afecta las métricas actuales (no dependen de izquierda/derecha), pero sí importaría si en v2 se agrega coaching de "mano izquierda/derecha".
-- **Multiidioma**: este prototipo solo tiene copy y reconocimiento de voz en español. La estructura (`FILLERS_ES`, strings de UI) está pensada para extenderse a EN/PT/FR/DE en la versión Emergent.
-- **Si el navegador no soporta Web Speech API** (poco común en Chrome Android/iOS Safari recientes), las métricas de muletillas/ritmo simplemente no se actualizan — el resto del flujo sigue funcionando.
+## Próximo paso
 
-## Próximo paso sugerido
+Con los 3 módulos navegables y el canvas-fix probado: confirmar que "Rostro" pasa a "detectado" y que las métricas de mirada/postura empiezan a moverse con valores reales. Con eso, armamos el prompt verificado para Emergent.
 
-Con esto probado en tu dispositivo (Motorola G75 / Chrome Android), confirmamos:
-- Si el FPS de detección y el tiempo de inferencia son aceptables con los dos modelos a la vez.
-- Si el reconocimiento de voz en español funciona bien para muletillas/wpm.
-- Si la estética/interacción se siente como se espera.
-
-Con eso validado, armamos el prompt verificado para Emergent (auditoría técnica + integración WebView en Expo, igual que KinearFit).
-
-## Troubleshooting (v2)
-
-Si tu reporte muestra **todas las métricas en 0 con puntaje exactamente 55**, eso indica que el loop de detección nunca corrió ni un solo tick — no es un problema de distancia/posición, es un error de código.
-
-**Qué se corrigió en esta versión**: `@tensorflow-models/handpose@0.1.0` (2020) es incompatible con `tfjs@4.20.0` — al lanzar error en cada frame, tumbaba también la detección de rostro vía `Promise.all`. Se reemplazó por `@tensorflow-models/hand-pose-detection` (runtime `tfjs`, compatible con tfjs 4.x), y ahora rostro/manos se evalúan de forma independiente.
-
-**Cómo leer el panel debug** (visible automáticamente al iniciar la sesión, ⚙ abajo a la derecha para ocultar/mostrar):
-
-| Fila | Qué significa |
-|---|---|
-| **Rostro** / **Manos** | "detectado" / número de manos = OK. Si ves **⚠ + mensaje en rojo**, es un error de librería/modelo — copia ese texto exacto, lo necesito para seguir ajustando. |
-| **Video** | resolución real de la cámara (ej. `640x480`). Si dice `0x0`, la cámara no está entregando frames — revisa permisos o reinicia la página. |
-| **Inferencia** | ms por tick. Verde = normal. Ámbar >130ms, Rojo >250ms = posible lag perceptible. |
-| **FPS** | ticks de detección por segundo (~7 esperado). |
-| **Voz** | "escuchando" = OK. "iniciando…" que nunca cambia, o **⚠**, indica que el reconocimiento de voz no está capturando audio. |
-| **Palabras** | conteo en vivo de la transcripción — si se queda en 0 mientras hablas, el micrófono/Web Speech no está funcionando. |
-
-**Si "Rostro"/"Manos" siguen sin detectar (sin error, dice "sin detección") pero Video/FPS se ven bien**: ahí sí aplica tu sugerencia de posición — prueba a la altura de los ojos, 50-80cm, buena luz, encuadre con cabeza+torso completos.
-
-**Sobre los módulos Ejercicios/Practicar**: no es un truncamiento — este prototipo cubre intencionalmente solo **Evaluar**, que es la base compartida (cámara + TFJS + semáforos + reporte) de los 3 módulos. Una vez confirmado que la detección funciona aquí, agregamos Ejercicios/Practicar reutilizando esta misma base.
