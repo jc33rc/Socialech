@@ -1301,8 +1301,10 @@ async function startSession(){
 
   try{
     state.stream = await navigator.mediaDevices.getUserMedia({
-      video:{ facingMode:'user', width:{ideal:640}, height:{ideal:480} },
-      audio:true
+      video:{ facingMode:'user', width:{ideal:640}, height:{ideal:480} }
+      // sin audio: SpeechRecognition pide su propio acceso al micrófono;
+      // pedirlo aquí también puede dejarlo "ocupado" y SpeechRecognition
+      // se queda sin disparar onresult/onerror (atascado en "iniciando…")
     });
     const video = $('cam');
     video.srcObject = state.stream;
@@ -1522,6 +1524,10 @@ function startSpeechRecognition(){
 
   $('dbg-speech').textContent = 'iniciando…';
 
+  state.recognition.onstart = () => {
+    $('dbg-row-speech').classList.remove('bad');
+    if($('dbg-speech').textContent === 'iniciando…') $('dbg-speech').textContent = 'escuchando (sin habla aún)';
+  };
   state.recognition.onresult = (event) => {
     let finalChunk = '';
     for(let i = event.resultIndex; i < event.results.length; i++){
