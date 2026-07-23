@@ -408,8 +408,8 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
 
 /* leaf semaforo bar */
 .leaf-bar{
-  position:absolute; left:0; right:0; bottom:calc(22px + var(--safe-bottom));
-  display:flex; justify-content:center; align-items:flex-end; gap:16px; z-index:3;
+  position:absolute; left:0; right:0; top:calc(70px + var(--safe-top));
+  display:flex; justify-content:center; align-items:flex-start; gap:16px; z-index:3;
 }
 .leaf-item{ display:flex; flex-direction:column; align-items:center; gap:6px; }
 .leaf{
@@ -420,8 +420,8 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
   display:flex; align-items:center; justify-content:center;
   box-shadow:0 2px 10px rgba(0,0,0,.18);
 }
-.leaf-item:nth-child(2) .leaf, .leaf-item:nth-child(4) .leaf{ transform:translateY(8px) rotate(-6deg); }
-.leaf-item:nth-child(1) .leaf, .leaf-item:nth-child(5) .leaf{ transform:translateY(14px) rotate(6deg); }
+.leaf-item:nth-child(2) .leaf, .leaf-item:nth-child(4) .leaf{ transform:translateY(0) rotate(-6deg); }
+.leaf-item:nth-child(1) .leaf, .leaf-item:nth-child(5) .leaf{ transform:translateY(0) rotate(6deg); }
 .leaf svg{ width:13px; height:13px; stroke:rgba(255,255,255,.92); fill:none; stroke-width:2.4; }
 .leaf.s-green{ background:var(--mint); box-shadow:0 0 14px rgba(43,184,156,.55), 0 2px 10px rgba(0,0,0,.18); }
 .leaf.s-amber{ background:var(--amber); box-shadow:0 0 14px rgba(242,184,75,.5), 0 2px 10px rgba(0,0,0,.18); }
@@ -429,8 +429,22 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
 .leaf.pulse-update{ animation:leafBump .42s var(--ease); }
 @keyframes leafBump{ 0%{ transform:scale(1) } 40%{ transform:scale(1.22) } 100%{ transform:scale(1) } }
 
-/* debug panel */
-#debug-toggle{
+/* pill de retroalimentación activa */
+.active-pill{
+  position:absolute; left:50%; transform:translateX(-50%) translateY(-12px);
+  top:calc(130px + var(--safe-top)); z-index:4;
+  background:rgba(14,31,27,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border:1.5px solid rgba(255,255,255,.18);
+  color:#fff; border-radius:var(--radius-pill);
+  padding:10px 22px; font-size:15px; font-weight:700; font-family:var(--font-display);
+  letter-spacing:.06em; white-space:nowrap;
+  opacity:0; pointer-events:none;
+  transition:opacity .25s var(--ease), transform .25s var(--ease);
+}
+.active-pill.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+.active-pill.positive{ background:rgba(43,184,156,.85); border-color:rgba(255,255,255,.25); }
+
+/* debug toggle abajo derecha */
   position:absolute; bottom:calc(22px + var(--safe-bottom)); right:14px; z-index:4;
   width:30px; height:30px; border-radius:50%;
   background:rgba(14,31,27,.42); border:1px solid rgba(255,255,255,.14);
@@ -561,6 +575,57 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
    MISC
    ============================================================ */
 .hidden{ display:none !important; }
+
+/* teleprompter en sesión */
+#teleprompter-overlay{
+  position:absolute; left:0; right:0; bottom:0; z-index:3;
+  padding:0 20px calc(28px + var(--safe-bottom)); pointer-events:none;
+}
+.tp-paragraph{
+  background:rgba(14,31,27,.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.14); border-radius:var(--radius-lg);
+  padding:18px 20px;
+}
+.tp-text{ font-size:20px; line-height:1.6; font-family:var(--font-display); font-weight:500; }
+.tp-word{ color:rgba(255,255,255,.45); transition:color .15s var(--ease); }
+.tp-word.done{ color:rgba(255,255,255,.22); }
+.tp-word.current{ color:#fff; font-weight:700; }
+.tp-pace-row{ display:flex; align-items:center; gap:8px; margin-top:10px;
+  font-size:12px; font-weight:700; color:rgba(255,255,255,.55); font-family:var(--font-display); }
+.tp-dot{ width:8px; height:8px; border-radius:50%; background:var(--gray-light);
+  transition:background .3s var(--ease); }
+.tp-dot.ok{ background:var(--mint); box-shadow:0 0 8px rgba(43,184,156,.5); }
+.tp-dot.fast{ background:var(--amber); }
+.tp-dot.slow{ background:var(--coral); }
+
+/* pregunta secuencial en Practicar */
+.q-overlay{
+  position:absolute; left:16px; right:16px; bottom:calc(80px + var(--safe-bottom)); z-index:3;
+  background:rgba(14,31,27,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border:1.5px solid rgba(255,255,255,.16); border-radius:var(--radius-lg);
+  padding:16px 18px;
+}
+.q-label{ font-size:11px; font-weight:700; color:rgba(255,255,255,.5);
+  letter-spacing:.1em; text-transform:uppercase; margin-bottom:6px; }
+.q-text{ font-size:16px; font-weight:600; color:#fff; line-height:1.4;
+  font-family:var(--font-display); }
+.q-bar{ margin-top:10px; height:3px; border-radius:2px;
+  background:rgba(255,255,255,.15); overflow:hidden; }
+.q-bar-fill{ height:100%; border-radius:2px; background:var(--mint);
+  width:100%; transition:width linear; }
+
+/* textarea teleprompter */
+.tp-textarea{ width:100%; min-height:110px; border:1.5px solid var(--mint-light);
+  border-radius:var(--radius-md); padding:14px 16px; font-size:14px;
+  font-family:var(--font-body); color:var(--ink); background:#fff;
+  outline:none; resize:vertical; line-height:1.6; margin-bottom:14px; }
+.tp-textarea:focus{ border-color:var(--mint); }
+.tp-chips{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+.tp-chip{ padding:9px 16px; border-radius:var(--radius-pill);
+  background:var(--mint-light); color:var(--mint-dark);
+  font-size:13px; font-weight:600; border:1.5px solid transparent;
+  transition:all var(--t-fast); cursor:pointer; }
+.tp-chip.selected{ background:var(--mint); color:#fff; }
 </style>
 </head>
 <body>
@@ -676,6 +741,10 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
       <button class="btn btn-primary" id="start-eval-btn">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
         Comenzar evaluación
+      </button>
+      <button class="btn btn-secondary" id="open-teleprompter-btn" style="margin-top:10px;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l-5 5-5-5"/></svg>
+        Usar teleprompter
       </button>
     </div>
   </section>
@@ -876,8 +945,18 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
       </div>
 
       <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        Preguntas
+      </div>
+      <div class="chip-row" id="pr-qcount-chips">
+        <div class="chip" data-val="5">5 preguntas</div>
+        <div class="chip selected" data-val="7">7 preguntas</div>
+        <div class="chip" data-val="9">9 — completo</div>
+      </div>
+
+      <div class="section-label">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        Duración
+        Duración máxima
       </div>
       <div class="chip-row" id="pr-duration-chips">
         <div class="chip selected" data-val="120">2 min</div>
@@ -904,6 +983,48 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
   </section>
 
   <!-- ============================================================
+       SCREEN: TELEPROMPTER CONFIG
+       ============================================================ -->
+  <section id="screen-teleprompter" class="screen">
+    <div class="ambient"><span></span><span></span></div>
+    <div class="content">
+      <div class="top-row">
+        <div class="icon-btn" id="tp-back"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></div>
+      </div>
+      <div class="eyebrow">Teleprompter</div>
+      <h1 class="title" style="margin-bottom:6px;">Texto guiado</h1>
+      <p class="lede">Practica leyendo tu texto mientras la app marca el ritmo palabra por palabra.</p>
+
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Ejemplos por contexto
+      </div>
+      <div class="tp-chips" id="tp-example-chips"></div>
+
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        O pega tu propio texto
+      </div>
+      <textarea class="tp-textarea" id="tp-custom-text" placeholder="Pega aquí tu texto. Se dividirá en párrafos automáticamente…"></textarea>
+
+      <div class="section-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Ritmo objetivo
+      </div>
+      <div class="chip-row" id="tp-pace-chips">
+        <div class="chip" data-wpm="120">Lento (120)</div>
+        <div class="chip selected" data-wpm="140">Normal (140)</div>
+        <div class="chip" data-wpm="160">Rápido (160)</div>
+      </div>
+
+      <button class="btn btn-primary" id="tp-start-btn">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+        Comenzar con teleprompter
+      </button>
+    </div>
+  </section>
+
+  <!-- ============================================================
        SCREEN: LIVE SESSION
        ============================================================ -->
   <section id="screen-session" class="screen">
@@ -920,6 +1041,8 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
         <div id="calib-oval"></div>
         <div id="calib-msg">Ubica tu rostro y manos en el encuadre</div>
       </div>
+
+      <div class="active-pill" id="active-pill"></div>
 
       <div class="leaf-bar" id="leaf-bar">
         <div class="leaf-item" data-key="eye">
@@ -956,6 +1079,24 @@ p.lede{ font-size:14.5px; color:var(--gray); line-height:1.55; margin:0 0 20px; 
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         <p id="session-error-text">Necesitamos acceso a tu cámara y micrófono para analizar tu sesión. Revisa los permisos del navegador y vuelve a intentar.</p>
         <button class="btn btn-secondary" id="session-error-back" style="max-width:200px;">Volver</button>
+      </div>
+
+      <!-- Teleprompter overlay (visible solo en modo teleprompter) -->
+      <div id="teleprompter-overlay" class="hidden">
+        <div class="tp-paragraph">
+          <div class="tp-text" id="tp-text"></div>
+          <div class="tp-pace-row">
+            <div class="tp-dot" id="tp-dot"></div>
+            <span id="tp-pace-label">Calibrando ritmo…</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preguntas secuenciales (visible solo en modo Practicar con preguntas) -->
+      <div class="q-overlay hidden" id="q-overlay">
+        <div class="q-label" id="q-label">PREGUNTA 1 DE 5</div>
+        <div class="q-text" id="q-text">—</div>
+        <div class="q-bar"><div class="q-bar-fill" id="q-bar-fill"></div></div>
       </div>
     </div>
   </section>
@@ -1053,11 +1194,12 @@ const state = {
   recognition: null,
   transcript: '',
   // ---- módulo / contexto ----
-  sessionMode: 'evaluar',   // 'evaluar' | 'ejercicio' | 'practicar'
-  exerciseKey: null,        // 'eye'|'hand'|'posture'|'filler'|'pace'
-  exerciseMeta: null,       // {name, desc}
+  sessionMode: 'evaluar',   // 'evaluar' | 'ejercicio' | 'practicar' | 'teleprompter'
+  exerciseKey: null,
+  exerciseMeta: null,
   practiceContext: '',
   checkin: 'Tranquilo',
+  qCount: 7,
   // mejores marcas por ejercicio (en memoria, se reinician al recargar la página)
   bestMarks: { eye:null, hand:null, posture:null, filler:null, pace:null },
   // series temporales para sparklines / promedios
@@ -1075,6 +1217,7 @@ const $ = (id) => document.getElementById(id);
 const screens = ['screen-loading','screen-home','screen-config',
   'screen-ejercicios-catalogo','screen-ejercicios-detalle','screen-ejercicio-resultado',
   'screen-practicar-contexto','screen-practicar-config',
+  'screen-teleprompter',
   'screen-session','screen-analyzing','screen-report'];
 
 function showScreen(id){
@@ -1212,6 +1355,14 @@ $('pr-checkin-chips').addEventListener('click', (e) => {
   document.querySelectorAll('#pr-checkin-chips .chip').forEach(c => c.classList.remove('selected'));
   chip.classList.add('selected');
   state.checkin = chip.dataset.val;
+});
+
+$('pr-qcount-chips').addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('#pr-qcount-chips .chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  state.qCount = parseInt(chip.dataset.val, 10);
 });
 
 $('pr-duration-chips').addEventListener('click', (e) => {
@@ -1367,6 +1518,18 @@ function beginTimedSession(){
   updateTimerDisplay(0);
   $('debug-panel').classList.add('show');
 
+  // resetear streaks de retroalimentación activa
+  streakTicks = {};
+  Object.keys(pillCooldown).forEach(k=>delete pillCooldown[k]);
+
+  // arrancar teleprompter o preguntas según modo
+  if(state.sessionMode === 'teleprompter'){
+    tpInit(state.tpText, state.tpWpm || 140);
+  } else if(state.sessionMode === 'practicar' && state.practiceContext && CONTEXTS[state.practiceContext]){
+    const ok = qsInit(state.practiceContext, state.qCount || 5);
+    if(ok) qsShow();
+  }
+
   state.timerInterval = setInterval(() => {
     const elapsed = (performance.now() - state.startTime) / 1000;
     updateTimerDisplay(elapsed);
@@ -1508,7 +1671,166 @@ function updateLeaf(id, level){
 // ============================================================
 // WEB SPEECH API — muletillas + ritmo (wpm)
 // ============================================================
-const FILLERS_ES = ['eh','ehh','em','emm','mmm','o sea','como que','es que','bueno','entonces','digamos','pues','tipo'];
+// ============================================================
+// CONTENIDO ESTÁTICO — 5 CONTEXTOS
+// ============================================================
+const CONTEXTS = {
+  'Entrevista de trabajo':{
+    msg:'En entrevistas, los nervios suelen acelerar el habla y aumentar las muletillas. Vamos a poner foco extra en tu ritmo, tus pausas y el contacto visual sostenido.',
+    techniques:[
+      {title:'Estructura STAR',body:'Situación → Tarea → Acción → Resultado. Úsala para responder preguntas de comportamiento sin perder el hilo.'},
+      {title:'La pausa de 2 segundos',body:'Antes de responder, respira. Dos segundos de silencio transmiten seguridad, no vacío.'},
+      {title:'Mirada al lente',body:'Si es videollamada, mira la cámara al hablar, no tu propia imagen. La diferencia es enorme para quien te escucha.'},
+      {title:'Cierra con una pregunta',body:'Al final de cada respuesta larga, pregunta algo breve: "¿Es ese el tipo de enfoque que buscaban?" Muestra interés real.'},
+      {title:'Volumen constante al final',body:'La voz suele bajar al terminar las frases cuando hay nervios. Mantén el volumen hasta el punto final.'}
+    ],
+    questions:[
+      {text:'¿Puedes contarme un poco sobre ti y tu trayectoria?',type:'apertura'},
+      {text:'¿Por qué te interesa este cargo específicamente?',type:'apertura'},
+      {text:'Cuéntame de un proyecto del que estés orgulloso y qué papel tuviste.',type:'desarrollo'},
+      {text:'¿Cómo manejas situaciones de presión o plazos muy ajustados?',type:'desarrollo'},
+      {text:'Describe un conflicto con un compañero o jefe y cómo lo resolviste.',type:'desarrollo'},
+      {text:'¿Cuál dirías que es tu mayor debilidad?',type:'presion'},
+      {text:'¿Por qué deberíamos contratarte a ti y no a otro candidato?',type:'presion'},
+      {text:'¿Dónde te ves en cinco años?',type:'presion'},
+      {text:'¿Tienes alguna pregunta para nosotros?',type:'cierre'}
+    ],
+    teleprompter:[
+      'Mi nombre es [nombre] y llevo [X] años trabajando en [área]. He desarrollado experiencia en [habilidad clave], lo que me ha permitido [logro concreto].',
+      'Lo que más me atrae de este cargo es la oportunidad de [aspecto del rol]. Mi experiencia en [área] encaja directamente con lo que buscan.',
+      'En mi último proyecto enfrenté el reto de [desafío]. Lo resolví a través de [acción concreta] y el resultado fue [impacto medible].',
+      'Estoy convencido de que puedo aportar valor desde el primer mes. Me gustaría conocer más sobre [aspecto del equipo]. ¿Podría contarme un poco más?'
+    ]
+  },
+  'Cita':{
+    msg:'En una cita, las pausas transmiten seguridad, no incomodidad. Vamos a observar tu contacto visual, tu ritmo y qué tan natural suenas cuando hablas de ti mismo.',
+    techniques:[
+      {title:'Pregunta abierta, no de sí/no',body:'En vez de "¿te gustó la película?", prueba "¿qué fue lo que más te llamó la atención?" Invita a una respuesta real.'},
+      {title:'Escucha activa visible',body:'Asiente, mantén la mirada, y cuando respondes, conecta con algo que dijo la otra persona antes de hablar de ti.'},
+      {title:'No llenes el silencio',body:'El silencio breve no es incómodo — rellenarlo con muletillas sí lo vuelve torpe. Deja respirar la conversación.'},
+      {title:'Comparte, no presumas',body:'"Me encanta escalar porque me desconecto completamente" conecta más que una lista de logros.'},
+      {title:'Sal con una salida preparada',body:'"Me alegra mucho que habláramos, me gustaría repetirlo" — corto, amable, sin excusas.'}
+    ],
+    questions:[
+      {text:'Cuéntame, ¿qué fue lo mejor de tu semana?',type:'apertura'},
+      {text:'¿Qué haces cuando tienes tiempo libre de verdad, sin pendientes?',type:'apertura'},
+      {text:'¿Hay algo que hayas querido aprender o probar y no has tenido la oportunidad?',type:'desarrollo'},
+      {text:'¿Cómo describirías tu trabajo a alguien que no sabe nada del tema?',type:'desarrollo'},
+      {text:'¿Cuál es el viaje o experiencia que más recuerdas y por qué?',type:'desarrollo'},
+      {text:'¿Qué es lo que más valoras en una persona?',type:'presion'},
+      {text:'¿Qué fue lo último que te hizo reír de verdad?',type:'presion'},
+      {text:'Si pudieras cambiar algo de tu rutina diaria, ¿qué sería?',type:'presion'},
+      {text:'¿Qué esperas de esta tarde?',type:'cierre'}
+    ],
+    teleprompter:[
+      'Cuando tengo tiempo libre me gusta [actividad]. Es algo que descubrí hace [tiempo] y desde entonces no puedo parar — te desconecta de una forma que no esperaba.',
+      'En el trabajo me dedico a [descripción simple]. Lo que más disfruto es [aspecto], aunque lo más retador suele ser [desafío honesto].',
+      'Un viaje que no olvido es [lugar]. Fue porque [razón concreta]. Desde entonces cambió un poco la forma en que veo [aspecto de la vida].',
+      'Valoro mucho la honestidad y el sentido del humor. Creo que si puedes reírte de las cosas, incluso de las difíciles, es mucho más fácil estar presente.'
+    ]
+  },
+  'Reunión social':{
+    msg:'En grupo es fácil acelerar el ritmo para "no quitar tiempo". Vamos a cuidar tu postura, tu cadencia y cómo te mantienes presente aunque no seas el centro de atención.',
+    techniques:[
+      {title:'Entra con una observación',body:'En vez de presentarte con tu título, comenta algo del entorno: "Esto está más animado de lo que esperaba." Rompe el hielo sin sonar ensayado.'},
+      {title:'La técnica del eco',body:'Repite con tus palabras lo último que dijo alguien antes de dar tu opinión. Muestra que escuchaste.'},
+      {title:'Postura abierta en grupo',body:'Cuerpo ligeramente inclinado hacia el grupo, brazos sin cruzar. La postura comunica si quieres estar ahí.'},
+      {title:'Cómo salir sin incomodar',body:'"Voy a saludar a alguien más, pero fue un gusto" — corto, amable, sin excusas innecesarias.'},
+      {title:'Habla despacio en grupo',body:'En grupos, hablar rápido hace que pierdas el hilo y que otros interrumpan. Un ritmo pausado transmite que lo que dices vale la pena esperar.'}
+    ],
+    questions:[
+      {text:'Hola, ¿cómo llegaste a este evento o reunión?',type:'apertura'},
+      {text:'¿Conoces a mucha gente aquí o es tu primera vez en este grupo?',type:'apertura'},
+      {text:'¿A qué te dedicas? Cuéntame un poco.',type:'desarrollo'},
+      {text:'¿Qué fue lo último que te entusiasmó fuera del trabajo?',type:'desarrollo'},
+      {text:'¿Tienes algún proyecto personal en el que estés trabajando?',type:'desarrollo'},
+      {text:'¿Cuál es tu opinión sobre el tema del evento?',type:'presion'},
+      {text:'Si pudieras recomendarme algo — libro, lugar, lo que sea — ¿qué sería?',type:'presion'},
+      {text:'¿Qué es lo más interesante que has aprendido últimamente?',type:'presion'},
+      {text:'Me alegra haberte conocido — ¿te quedas un rato más?',type:'cierre'}
+    ],
+    teleprompter:[
+      'Llegué aquí a través de [conexión]. No conocía mucho del grupo pero me pareció interesante el tema y quise acercarme — me alegra haberlo hecho.',
+      'Me dedico a [área] y lo que más me gusta es [aspecto humano o creativo]. No siempre es lo que la gente espera cuando lo cuento.',
+      'Últimamente he estado enfocado en [proyecto o interés]. Todavía estoy aprendiendo, pero es justo esa parte la que me tiene enganchado.',
+      'Fue un gusto conocerte. Si en algún momento quieres seguir la conversación, con mucho gusto. Que disfrutes el resto de la noche.'
+    ]
+  },
+  'Presentación':{
+    msg:'En presentaciones, la postura y el contacto visual sostienen tu mensaje tanto como el contenido. Vamos a poner foco en tu apertura, tu ritmo y cómo cierras con impacto.',
+    techniques:[
+      {title:'Abre con impacto, no con disculpas',body:'Nunca empieces con "bueno, esto va a ser corto" o "perdón si no soy muy bueno". Empieza con una pregunta o un dato sorprendente.'},
+      {title:'La regla de los tres puntos',body:'Anuncia al inicio los tres puntos que vas a cubrir. Al final, repítelos. La estructura predecible reduce la ansiedad del público y la tuya.'},
+      {title:'Pausa antes del punto clave',body:'Antes de tu mensaje más importante, haz una pausa de 1-2 segundos. Ese silencio le dice al cerebro del oyente que preste atención.'},
+      {title:'Mira a personas, no a la sala',body:'Elige una persona, termina una idea mirándola, luego pasa a otra. Se siente más personal.'},
+      {title:'Cierre que invite a algo',body:'No cierres con "eso es todo". Cierra con una pregunta al público o una frase que haga pensar.'}
+    ],
+    questions:[
+      {text:'Haz tu apertura — capta la atención en los primeros 30 segundos.',type:'apertura'},
+      {text:'Presenta el problema o contexto que motiva tu presentación.',type:'apertura'},
+      {text:'Explica tu propuesta o solución principal con claridad.',type:'desarrollo'},
+      {text:'Da un ejemplo concreto o caso que respalde tu argumento.',type:'desarrollo'},
+      {text:'Anticipa una objeción posible y respóndela antes de que la pregunten.',type:'desarrollo'},
+      {text:'Tienes 15 segundos — resume todo en una sola frase.',type:'presion'},
+      {text:'¿Qué pasaría si no hacemos nada al respecto?',type:'presion'},
+      {text:'Alguien del público no está convencido — ¿qué le dices?',type:'presion'},
+      {text:'Haz tu cierre — deja una idea final que el público recuerde.',type:'cierre'}
+    ],
+    teleprompter:[
+      'Quiero empezar con una pregunta: ¿cuántas veces hemos tenido una buena idea pero no supimos cómo comunicarla? Eso es exactamente lo que vamos a trabajar hoy.',
+      'El problema que quiero abordar es [problema concreto]. Afecta a [audiencia] y generalmente se manifiesta como [síntoma]. No es nuevo, pero sí urgente.',
+      'La propuesta es [solución clara]. Requiere [recurso o acción] y los resultados que hemos visto son [impacto medible]. Les cuento un ejemplo.',
+      'Para cerrar: lo que hoy les presento es una oportunidad de [beneficio concreto]. La pregunta no es si podemos hacerlo, sino si nos damos el permiso de intentarlo. Gracias.'
+    ]
+  },
+  'Llamada importante':{
+    msg:'Sin contacto visual real, tu voz lleva más peso. Vamos a enfocarnos en ritmo, muletillas y claridad — que cada frase llegue completa y con intención.',
+    techniques:[
+      {title:'Di el objetivo al inicio',body:'"Te llamo porque necesito tu opinión sobre algo específico" elimina la ambigüedad y pone al otro en modo escucha.'},
+      {title:'Habla más despacio',body:'Sin lenguaje corporal, el cerebro necesita más tiempo para procesar. Un 15-20% más lento de tu ritmo habitual es el punto ideal.'},
+      {title:'Confirma que te entienden',body:'Cada cierto tiempo, pregunta: "¿Tiene sentido hasta ahí?" No es inseguridad — es comunicación efectiva.'},
+      {title:'Evita el relleno de silencio',body:'En llamadas, el silencio suena más largo de lo que es. Una pausa limpia suena más profesional que "eh... bueno... o sea".'},
+      {title:'Cierra con próximos pasos claros',body:'"Entonces tú me mandas X el viernes y yo confirmo el lunes, ¿correcto?" Evita malentendidos post-llamada.'}
+    ],
+    questions:[
+      {text:'Abre la llamada — saluda y di claramente para qué estás llamando.',type:'apertura'},
+      {text:'Da el contexto necesario para que la otra persona entienda la situación.',type:'apertura'},
+      {text:'Explica tu posición o solicitud principal con detalle.',type:'desarrollo'},
+      {text:'La otra persona tiene una duda — respóndela con claridad.',type:'desarrollo'},
+      {text:'Hay resistencia o desacuerdo — ¿cómo lo manejas sin perder el hilo?',type:'desarrollo'},
+      {text:'Te piden que lo resumas en 20 segundos. Hazlo.',type:'presion'},
+      {text:'La otra persona está distraída — recupera su atención sin sonar desesperado.',type:'presion'},
+      {text:'¿Cuál es el peor escenario si esto no sale como esperas?',type:'presion'},
+      {text:'Cierra la llamada — resume los acuerdos y despídete con claridad.',type:'cierre'}
+    ],
+    teleprompter:[
+      'Hola [nombre], gracias por tomar la llamada. Te llamo específicamente porque [razón concreta]. Quiero ser breve y al grano.',
+      'El contexto es el siguiente: [situación]. Esto afecta [consecuencia] y por eso necesito [lo que necesitas]. ¿Tienes toda la información o necesitas que amplíe algo?',
+      'Mi propuesta concreta es [propuesta]. Creo que beneficia a ambas partes porque [razón]. Si hay algo que no te convence, con gusto lo conversamos.',
+      'Para cerrar: quedamos en que [acuerdo 1] y [acuerdo 2]. Yo me encargo de [mi parte] y tú confirmas [su parte] antes del [fecha]. ¿Correcto? Muchas gracias.'
+    ]
+  }
+};
+
+// TIMING por tipo de pregunta (ms) — variable dentro del rango
+const Q_TIMING = {
+  apertura: [25000, 35000],
+  desarrollo:[20000, 30000],
+  presion:   [10000, 18000],
+  cierre:    [18000, 28000]
+};
+
+// FILLERS expandidos — español colombiano/latino + formales + rellenos
+const FILLERS_ES = [
+  'eh','ehh','ehhh','em','emm','emmm','ah','ahh','ahhh','mmm','mmmm','uh','uhh',
+  'este','pues','o sea','como','digamos','sí','no','cierto','verdad',
+  'entonces','bueno','mira','mire','o sea que','es que','a ver','ve','fíjate',
+  'básicamente','exactamente','obviamente','literalmente','realmente','en realidad',
+  'de hecho','efectivamente','prácticamente','claramente','evidentemente',
+  'francamente','honestamente','sinceramente','definitivamente','absolutamente','totalmente',
+  'en fin','al final','de alguna manera','en cierta forma','por así decirlo',
+  'como quien dice','más o menos','o algo así','digamos que','o sea pues'
+];
 
 function startSpeechRecognition(){
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1559,10 +1881,14 @@ function stopSpeechRecognition(){
 }
 
 function countFillers(text){
-  const low = text.toLowerCase();
+  const low = text.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // quitar tildes para matching
+    .replace(/[¿¡?!.,;:]/g,' ');
   let count = 0;
   FILLERS_ES.forEach(f => {
-    const re = new RegExp('\\b'+f.replace(' ','\\s+')+'\\b','g');
+    const fn = f.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    const escaped = fn.replace(/\s+/g,'\\s+').replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const re = new RegExp('(?:^|\\s)'+escaped+'(?:\\s|$)','g');
     const m = low.match(re);
     if(m) count += m.length;
   });
@@ -1571,19 +1897,253 @@ function countFillers(text){
 
 function updateSpeechLeaves(){
   if(!state.calibrated || !state.startTime) return;
+  // usar tiempo REAL de sesión, no tiempo de llegada de chunks
   const elapsedMin = Math.max((performance.now()-state.startTime)/60000, 1/60);
   const words = state.transcript.trim().split(/\s+/).filter(Boolean).length;
-  const wpm = words / elapsedMin;
+  // wpm = palabras / minutos reales de sesión
+  const wpm = Math.round(words / elapsedMin);
   const fillers = countFillers(state.transcript);
   const fillerRate = fillers / elapsedMin;
 
   updateLeaf('leaf-ritmo', (wpm>=110 && wpm<=170) ? 'green' : (wpm>=80 && wpm<=200) ? 'amber' : 'coral');
   updateLeaf('leaf-muletillas', fillerRate <= 2 ? 'green' : fillerRate <= 5 ? 'amber' : 'coral');
+
+  // retroalimentación activa en Ejercicios y Practicar
+  if(state.sessionMode !== 'evaluar') updateActivePill();
 }
 
 // ============================================================
-// DEBUG PANEL
+// RETROALIMENTACIÓN ACTIVA — pill (solo Ejercicios y Practicar)
 // ============================================================
+const PILL_MESSAGES = {
+  eye:     { text:'MIRA AL FRENTE', positive:'BUEN CONTACTO' },
+  hand:    { text:'MANOS ABAJO',    positive:'MANOS FIRMES' },
+  posture: { text:'ENDEREZA',       positive:'BUENA POSTURA' },
+  filler:  { text:'PAUSA',          positive:null },
+  pace:    { text:'RESPIRA',        positive:null }
+};
+const pillCooldown = {}; // {key: timestamp}
+const COOLDOWN_MS = 5000;
+let streakTicks = {}; // {key: count}
+
+function updateActivePill(){
+  const now = performance.now();
+  // verificar cada hoja en coral sostenido (3+ ticks) → aviso
+  ['eye','hand','posture','filler','pace'].forEach(key => {
+    const leafId = {eye:'leaf-mirada',hand:'leaf-gestos',posture:'leaf-postura',filler:'leaf-muletillas',pace:'leaf-ritmo'}[key];
+    const leaf = $(leafId);
+    const isRed = leaf.classList.contains('s-coral');
+    const isGreen = leaf.classList.contains('s-green');
+
+    if(isRed){
+      streakTicks[key+'_red'] = (streakTicks[key+'_red']||0)+1;
+      streakTicks[key+'_green'] = 0;
+      if(streakTicks[key+'_red'] >= 3){
+        if(!pillCooldown[key] || now - pillCooldown[key] > COOLDOWN_MS){
+          showPill(PILL_MESSAGES[key].text, false);
+          pillCooldown[key] = now;
+          streakTicks[key+'_red'] = 0;
+        }
+      }
+    } else if(isGreen){
+      streakTicks[key+'_green'] = (streakTicks[key+'_green']||0)+1;
+      streakTicks[key+'_red'] = 0;
+      if(streakTicks[key+'_green'] === 15 && PILL_MESSAGES[key].positive){
+        showPill(PILL_MESSAGES[key].positive, true);
+        streakTicks[key+'_green'] = 0;
+      }
+    } else {
+      streakTicks[key+'_red'] = 0;
+      streakTicks[key+'_green'] = 0;
+    }
+  });
+}
+
+let pillTimeout = null;
+function showPill(text, positive){
+  const pill = $('active-pill');
+  if(!pill) return;
+  pill.textContent = text;
+  pill.classList.toggle('positive', positive);
+  pill.classList.add('show');
+  if(pillTimeout) clearTimeout(pillTimeout);
+  pillTimeout = setTimeout(()=>{ pill.classList.remove('show'); }, 1600);
+}
+
+// ============================================================
+// TELEPROMPTER — lógica de sesión
+// ============================================================
+const tp = {
+  paragraphs: [], // array de strings (párrafos)
+  words: [],      // array plano de palabras del párrafo actual
+  paraIdx: 0,
+  wordIdx: 0,
+  wpm: 140,
+  interval: null,
+  msPerWord: 0,
+  startTs: 0
+};
+
+function tpInit(text, wpm){
+  tp.paragraphs = text.split(/\n+/).map(p=>p.trim()).filter(Boolean);
+  tp.paraIdx = 0; tp.wordIdx = 0; tp.wpm = wpm;
+  tp.msPerWord = (60/wpm)*1000;
+  tpRenderParagraph();
+}
+
+function tpRenderParagraph(){
+  const overlay = $('teleprompter-overlay');
+  if(!overlay || tp.paraIdx >= tp.paragraphs.length){ tpEnd(); return; }
+  overlay.classList.remove('hidden');
+  const para = tp.paragraphs[tp.paraIdx];
+  tp.words = para.split(/\s+/).filter(Boolean);
+  tp.wordIdx = 0;
+  const textEl = $('tp-text');
+  textEl.innerHTML = tp.words.map((w,i)=>`<span class="tp-word upcoming" data-i="${i}">${w}</span>`).join(' ');
+  tpAdvance();
+}
+
+function tpAdvance(){
+  if(tp.interval) clearInterval(tp.interval);
+  tp.interval = setInterval(()=>{
+    if(!state.sessionActive){ clearInterval(tp.interval); return; }
+    if(tp.wordIdx >= tp.words.length){
+      clearInterval(tp.interval);
+      tp.paraIdx++;
+      setTimeout(tpRenderParagraph, 800);
+      return;
+    }
+    const spans = $('tp-text').querySelectorAll('.tp-word');
+    spans.forEach((s,i)=>{
+      s.className = 'tp-word '+(i<tp.wordIdx?'done':i===tp.wordIdx?'current':'upcoming');
+    });
+    // pace indicator
+    const elapsed = performance.now() - state.startTime;
+    const expectedWords = Math.round((elapsed/60000)*tp.wpm);
+    const actualWords = state.transcript.trim().split(/\s+/).filter(Boolean).length;
+    const dot = $('tp-dot'), lbl = $('tp-pace-label');
+    if(!dot||!lbl) return;
+    const diff = actualWords - expectedWords;
+    if(Math.abs(diff)<5){ dot.className='tp-dot ok'; lbl.textContent='Al ritmo'; }
+    else if(diff>5){ dot.className='tp-dot fast'; lbl.textContent='Vas rápido'; }
+    else{ dot.className='tp-dot slow'; lbl.textContent='Más rápido'; }
+
+    tp.wordIdx++;
+  }, tp.msPerWord);
+}
+
+function tpEnd(){
+  const overlay = $('teleprompter-overlay');
+  if(overlay) overlay.classList.add('hidden');
+  if(tp.interval) clearInterval(tp.interval);
+}
+
+function tpStop(){
+  if(tp.interval) clearInterval(tp.interval);
+  const overlay = $('teleprompter-overlay');
+  if(overlay) overlay.classList.add('hidden');
+}
+
+// ============================================================
+// PREGUNTAS SECUENCIALES — Practicar
+// ============================================================
+const qs = {
+  list: [],     // preguntas seleccionadas y ordenadas
+  idx: 0,
+  timer: null,
+  barTimer: null
+};
+
+function qsRandInRange([min,max]){ return Math.floor(Math.random()*(max-min)+min); }
+
+function qsInit(contextName, count){
+  const ctx = CONTEXTS[contextName];
+  if(!ctx || !ctx.questions){ return false; }
+  // ordenar: apertura → desarrollo → presion → cierre, luego tomar `count`
+  const order = ['apertura','desarrollo','presion','cierre'];
+  const sorted = [...ctx.questions].sort((a,b)=>order.indexOf(a.type)-order.indexOf(b.type));
+  // si count < 9, quitar algunas de presion/desarrollo por el centro
+  qs.list = sorted.slice(0, count);
+  qs.idx = 0;
+  return true;
+}
+
+function qsShow(){
+  const overlay = $('q-overlay');
+  if(!overlay) return;
+  if(qs.idx >= qs.list.length){ qsEnd(); return; }
+  overlay.classList.remove('hidden');
+  const q = qs.list[qs.idx];
+  $('q-label').textContent = `PREGUNTA ${qs.idx+1} DE ${qs.list.length}`;
+  $('q-text').textContent = q.text;
+
+  const duration = qsRandInRange(Q_TIMING[q.type] || [15000,25000]);
+  const fill = $('q-bar-fill');
+  if(fill){ fill.style.transition='none'; fill.style.width='100%'; }
+  setTimeout(()=>{ if(fill){ fill.style.transition=`width ${duration}ms linear`; fill.style.width='0%'; } },50);
+
+  qs.timer = setTimeout(()=>{
+    qs.idx++;
+    qsShow();
+  }, duration);
+}
+
+function qsEnd(){
+  const overlay = $('q-overlay');
+  if(overlay) overlay.classList.add('hidden');
+  if(qs.timer) clearTimeout(qs.timer);
+}
+
+function qsStop(){
+  if(qs.timer) clearTimeout(qs.timer);
+  const overlay = $('q-overlay');
+  if(overlay) overlay.classList.add('hidden');
+}
+
+// ============================================================
+// TELEPROMPTER — config screen JS
+// ============================================================
+$('tp-back').addEventListener('click', () => showScreen('screen-config'));
+$('open-teleprompter-btn').addEventListener('click', () => {
+  // rellenar chips con textos de ejemplo de todos los contextos
+  const chips = $('tp-example-chips');
+  chips.innerHTML = '';
+  Object.entries(CONTEXTS).forEach(([name, ctx]) => {
+    const chip = document.createElement('div');
+    chip.className = 'tp-chip';
+    chip.textContent = name;
+    chip.dataset.ctx = name;
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('.tp-chip').forEach(c=>c.classList.remove('selected'));
+      chip.classList.add('selected');
+      $('tp-custom-text').value = ctx.teleprompter.join('\n\n');
+    });
+    chips.appendChild(chip);
+  });
+  showScreen('screen-teleprompter');
+});
+
+$('tp-pace-chips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  document.querySelectorAll('#tp-pace-chips .chip').forEach(c=>c.classList.remove('selected'));
+  chip.classList.add('selected');
+  state.tpWpm = parseInt(chip.dataset.wpm, 10);
+});
+
+$('tp-start-btn').addEventListener('click', ()=>{
+  const text = ($('tp-custom-text').value||'').trim();
+  if(!text){ alert('Por favor ingresa o selecciona un texto primero.'); return; }
+  state.tpText = text;
+  state.tpWpm = state.tpWpm || 140;
+  state.sessionMode = 'teleprompter';
+  state.exerciseKey = null;
+  startSession();
+});
+
+// state para teleprompter
+state.tpText = '';
+state.tpWpm = 140;
 $('debug-toggle').addEventListener('click', () => {
   $('debug-panel').classList.toggle('show');
 });
@@ -1620,6 +2180,9 @@ function endSession(){
   clearInterval(state.timerInterval);
   clearInterval(state.detectInterval);
   stopSpeechRecognition();
+  tpStop();
+  qsStop();
+  if(pillTimeout) clearTimeout(pillTimeout);
 
   showScreen('screen-analyzing');
   setTimeout(() => {
@@ -1810,17 +2373,34 @@ function buildExerciseResult(){
   const bestNow = state.bestMarks[key];
 
   $('ej-res-title').textContent = state.exerciseMeta ? state.exerciseMeta.name : 'Resultado';
-  $('ej-res-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">${EXERCISE_ICONS[key]}</svg>`;
+  $('ej-res-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${EXERCISE_ICONS[key]}</svg>`;
   $('ej-res-value').textContent = today.display;
   $('ej-res-value').style.color = levelColor(today.level);
-  $('ej-res-label').textContent = improved ? (best===null ? 'Tu punto de partida' : '¡Nueva mejor marca!') : 'Sigue así';
+  $('ej-res-label').textContent = improved ? (best===null ? 'Tu punto de partida' : '¡Nueva mejor marca!') : 'Sigue practicando';
 
   $('ej-res-today').textContent = today.display;
   $('ej-res-best').textContent = bestNow === null ? '—' : (bestNow + EXERCISE_UNIT[key]);
 
   const fill = exerciseProgressFill(key, today.value);
   setTimeout(()=>{ $('ej-progress-fill').style.width = fill+'%'; }, 80);
-  $('ej-progress-cap').textContent = fill >= 100 ? '¡Dominado!' : fill >= 75 ? 'Casi lo dominas — sigue practicando' : 'Sigue practicando para dominarlo';
+
+  // mensaje accionable según clave de ejercicio
+  let cap = '';
+  if(key === 'pace'){
+    const wpm = m.wpm;
+    if(wpm >= 120 && wpm <= 160) cap = `${wpm} wpm — dentro del rango ideal (120-160). ¡Bien!`;
+    else if(wpm > 160) cap = `${wpm} wpm — vas rápido. El objetivo es bajar a 120-160 wpm.`;
+    else if(wpm > 0) cap = `${wpm} wpm — vas lento. El objetivo es subir a 120-160 wpm.`;
+    else cap = 'Sin datos de voz — asegúrate de hablar durante la sesión.';
+  } else if(key === 'filler'){
+    const rate = m.fillerPerMin;
+    if(rate <= 2) cap = `${rate.toFixed(1)}/min — excelente. Mantén las pausas en vez de muletillas.`;
+    else if(rate <= 5) cap = `${rate.toFixed(1)}/min — en camino. Intenta menos de 2 por minuto.`;
+    else cap = `${rate.toFixed(1)}/min — alto. Practica pausar en vez de rellenar con "eh", "pues", "o sea"...`;
+  } else {
+    cap = fill >= 100 ? '¡Habilidad dominada!' : fill >= 75 ? 'Muy cerca — una sesión más puede hacerlo.' : 'Sigue practicando para dominarlo.';
+  }
+  $('ej-progress-cap').textContent = cap;
 }
 
 function avgArr(arr){ return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
@@ -1851,22 +2431,52 @@ async function callGroq(){
   $('groq-summary').classList.add('hidden');
   $('key-field').classList.add('hidden');
 
+  // análisis de patrón de quiebre (inicio/medio/final de la sesión)
+  const thirds = Math.floor(state.series.eye.length/3)||1;
+  const eyeStart  = Math.round(avgArr(state.series.eye.slice(0,thirds)));
+  const eyeMid    = Math.round(avgArr(state.series.eye.slice(thirds,thirds*2)));
+  const eyeEnd    = Math.round(avgArr(state.series.eye.slice(thirds*2)));
+  const postStart = Math.round(avgArr(state.series.posture.slice(0,thirds)));
+  const postEnd   = Math.round(avgArr(state.series.posture.slice(thirds*2)));
+
+  // vocabulario repetitivo (top 3 palabras >4 letras más usadas, excl. stopwords)
+  const stopwords = new Set(['para','como','pero','esto','esta','este','porque','cuando','donde','tiene','hacer','puedo','puede','todo','algo','bien','aqui','alli','muy','más','que','con','una','uno','los','las','del','por','sus','nos','les','hay','hoy','fue','ser','era','son','han','sin','sobre','entre','desde','hasta','cada','otro','otra','unos','unas','cómo','qué','cuál','cuáles']);
+  const wordFreq = {};
+  (lastMetrics.transcriptSample||'').toLowerCase().split(/\s+/).forEach(w=>{
+    const clean = w.replace(/[^a-záéíóúñü]/g,'');
+    if(clean.length>4 && !stopwords.has(clean)) wordFreq[clean]=(wordFreq[clean]||0)+1;
+  });
+  const topWords = Object.entries(wordFreq).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([w,n])=>`"${w}" (${n}x)`).join(', ');
+
+  // ejercicio sugerido según peor métrica
+  const metricScores = {
+    'Contacto visual': lastMetrics.eyePct,
+    'Postura': lastMetrics.postureStablePct,
+    'Gestos de manos': 100-Math.min(lastMetrics.touchPerMin*10,100),
+    'Muletillas': 100-Math.min(lastMetrics.fillerPerMin*20,100),
+    'Ritmo': (lastMetrics.wpm>=110&&lastMetrics.wpm<=170)?100:(lastMetrics.wpm>=80&&lastMetrics.wpm<=200)?60:20
+  };
+  const worstMetric = Object.entries(metricScores).sort((a,b)=>a[1]-b[1])[0][0];
+  const exerciseMap = {'Contacto visual':'Punto fijo','Postura':'Columna alineada','Gestos de manos':'Manos ancladas','Muletillas':'Pausa consciente','Ritmo':'Cadencia controlada'};
+
   const contextLine = lastMetrics.practiceContext
-    ? `\nContexto: el usuario se está preparando para "${lastMetrics.practiceContext}". Check-in emocional: "${lastMetrics.checkin}".\nAdapta las recomendaciones específicamente a ese contexto.${lastMetrics.checkin==='Muy nervioso' ? ' Incluye una frase final breve de aliento reconociendo el nerviosismo sin minimizarlo, sin sugerir evitar la situación.' : ''}`
+    ? `\nContexto: el usuario se prepara para "${lastMetrics.practiceContext}". Check-in emocional: "${lastMetrics.checkin}". Adapta las recomendaciones específicamente a ese contexto.${lastMetrics.checkin==='Muy nervioso' ? ' Incluye una frase breve de aliento reconociendo el nerviosismo sin minimizarlo.' : ''}`
     : '';
 
   const sys = `Eres un coach de comunicación cálido, cercano y constructivo. Responde SIEMPRE en español, en JSON válido y nada más (sin markdown, sin backticks), con esta forma exacta:
-{"resumen":"1-2 frases motivadoras sobre el desempeño general","recomendaciones":["recomendación 1","recomendación 2","recomendación 3"]}
-Nunca uses lenguaje punitivo. Enmarca todo como oportunidades de mejora.${contextLine}`;
+{"resumen":"1-2 frases motivadoras sobre el desempeño general, mencionando algún patrón específico detectado","recomendaciones":["recomendación concreta 1","recomendación concreta 2","recomendación concreta 3"],"ejercicio_sugerido":"nombre del ejercicio recomendado"}
+Nunca uses lenguaje punitivo. Enmarca todo como oportunidades de mejora. Sé específico con los datos — menciona números reales cuando refuercen el mensaje.${contextLine}`;
 
-  const userMsg = `Métricas de la sesión (${lastMetrics.durationMin} min, tema: ${lastMetrics.topic || 'libre'}):
-- Contacto visual: ${lastMetrics.eyePct}%
-- Postura estable: ${lastMetrics.postureStablePct}%
+  const userMsg = `Métricas de la sesión (${lastMetrics.durationMin} min${lastMetrics.topic ? ', tema: '+lastMetrics.topic : ''}):
+- Contacto visual: ${lastMetrics.eyePct}% (inicio: ${eyeStart}%, medio: ${eyeMid}%, final: ${eyeEnd}%)
+- Postura estable: ${lastMetrics.postureStablePct}% (inicio: ${postStart}%, final: ${postEnd}%)
 - Toques al rostro: ${lastMetrics.touchPerMin}/min
-- Muletillas: ${lastMetrics.fillers} (${lastMetrics.fillerPerMin}/min)
-- Ritmo: ${lastMetrics.wpm} wpm
+- Muletillas: ${lastMetrics.fillers} detectadas (${lastMetrics.fillerPerMin}/min)
+- Ritmo de habla: ${lastMetrics.wpm} wpm (rango ideal: 120-160)
 - Puntaje general: ${lastMetrics.overall}/100
-Fragmento de transcripción: "${lastMetrics.transcriptSample}"`;
+- Vocabulario más repetido: ${topWords || 'no detectado'}
+- Ejercicio sugerido por datos: ${exerciseMap[worstMetric]} (área más débil: ${worstMetric})
+Transcripción: "${lastMetrics.transcriptSample}"`;
 
   try{
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -1887,6 +2497,17 @@ Fragmento de transcripción: "${lastMetrics.transcriptSample}"`;
     $('groq-loading').classList.add('hidden');
     $('groq-summary').textContent = parsed.resumen || '';
     $('groq-summary').classList.remove('hidden');
+
+    if(parsed.ejercicio_sugerido){
+      const existing = $('groq-ejercicio');
+      if(!existing){
+        const div = document.createElement('div');
+        div.id = 'groq-ejercicio';
+        div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:22px;background:var(--mint);color:#fff;margin-bottom:14px;font-size:13.5px;font-weight:600;';
+        div.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg><span>Ejercicio sugerido: ${parsed.ejercicio_sugerido}</span>`;
+        $('groq-summary').insertAdjacentElement('afterend', div);
+      }
+    }
 
     $('rec-cards').innerHTML = (parsed.recomendaciones||[]).map((r,i)=>`
       <div class="rec-card">
